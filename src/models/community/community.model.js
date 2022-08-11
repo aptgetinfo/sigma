@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { setLastUpdated } = require('./community.methods');
 const { toJSON, paginate } = require('../plugins');
+const { blockchain } = require('../../config/blockchain');
+const { category } = require('../../config/category');
 
 const communitySchema = mongoose.Schema({
   name: {
@@ -15,7 +17,7 @@ const communitySchema = mongoose.Schema({
   category: [
     {
       type: String,
-      enum: ['Technology', 'Business', 'Politics', 'Health', 'Sports', 'Entertainment', 'Other'],
+      enum: [...category],
       required: [true, 'Category Required'],
     },
   ],
@@ -25,7 +27,7 @@ const communitySchema = mongoose.Schema({
   },
   blockchain: {
     type: String,
-    enum: ['Ethereum', 'Bitcoin', 'Litecoin', 'Ripple', 'Stellar', 'Ethereum Classic'],
+    enum: [...blockchain],
     required: [true, 'A community must have a blockchain'],
   },
   admin: {

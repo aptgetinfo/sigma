@@ -95,7 +95,6 @@ const userSchema = mongoose.Schema({
       },
       completedAt: {
         type: Date,
-        default: new Date(),
       },
       approvedBy: {
         type: mongoose.Schema.Types.ObjectId,
