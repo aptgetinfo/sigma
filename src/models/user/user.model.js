@@ -4,74 +4,131 @@ const bcrypt = require('bcryptjs');
 const { getOtp, matchOtp, isPasswordMatch } = require('./user.methods');
 const { isEmailTaken, isPhoneTaken } = require('./user.statics');
 const { toJSON, paginate } = require('../plugins');
-const { roles } = require('../../config/roles');
 
-const userSchema = mongoose.Schema(
-  {
-    name: {
+const userSchema = mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Name Required'],
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: [true, 'Email Required'],
+    unique: true,
+    trim: true,
+    lowercase: true,
+    validate: [validator.isEmail, 'Please provide a valid email'],
+  },
+  phone: {
+    countryCode: {
       type: String,
-      required: [true, 'Name Required'],
-      trim: true,
-    },
-    email: {
-      type: String,
-      required: [true, 'Email Required'],
-      unique: true,
-      trim: true,
-      lowercase: true,
-      validate: [validator.isEmail, 'Please provide a valid email'],
-    },
-    phone: {
-      type: String,
-      required: [true, 'Phone Number Required'],
-      unique: true,
+      required: [true, 'Country Code Required'],
       trim: true,
       lowercase: true,
       validate(value) {
-        if (!value.match('[0-9]{10}')) {
+        if (!value.match(/^[0-9]+$/)) {
           throw new Error('Please provide a valid phone number');
         }
       },
     },
-    image: {
+    number: {
       type: String,
+      required: [true, 'Phone Number Required'],
       trim: true,
-    },
-    password: {
-      type: String,
-      required: [true, 'Password Required'],
-      trim: true,
-      minlength: 8,
+      lowercase: true,
       validate(value) {
-        if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-          throw new Error('Password must contain at least one letter and one number');
+        if (!value.match(/^[0-9]+$/)) {
+          throw new Error('Please provide a valid phone number');
         }
       },
-      private: true,
-    },
-    role: {
-      type: String,
-      enum: roles,
-      default: 'user',
-    },
-    isEmailVerified: {
-      type: Boolean,
-      default: false,
-    },
-    isPhoneVerified: {
-      type: Boolean,
-      default: false,
-    },
-    isActive: {
-      type: Boolean,
-      default: true,
-      private: true,
     },
   },
-  {
-    timestamps: true,
-  }
-);
+  description: {
+    type: String,
+    required: [true, 'Description Required'],
+  },
+  image: {
+    type: String,
+    trim: true,
+  },
+  password: {
+    type: String,
+    required: [true, 'Password Required'],
+    trim: true,
+    minlength: 8,
+    validate(value) {
+      if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+        throw new Error('Password must contain at least one letter and one number');
+      }
+    },
+    private: true,
+  },
+  walletAddress: {
+    type: String,
+    trim: true,
+  },
+  twitter: {
+    type: String,
+    trim: true,
+  },
+  discord: {
+    type: String,
+    trim: true,
+  },
+  telegram: {
+    type: String,
+    trim: true,
+  },
+  website: {
+    type: String,
+    trim: true,
+  },
+  taskCompleted: [
+    {
+      taskId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task',
+      },
+      communityId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Community',
+      },
+      completedAt: {
+        type: Date,
+        default: new Date(),
+      },
+      approvedBy: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+      reward: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
+  isEmailVerified: {
+    type: Boolean,
+    default: false,
+  },
+  isPhoneVerified: {
+    type: Boolean,
+    default: false,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+    private: true,
+  },
+  dateOfEntry: {
+    type: Date,
+    default: new Date(),
+  },
+  lastUpdated: {
+    type: Date,
+    default: new Date(),
+  },
+});
 
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
