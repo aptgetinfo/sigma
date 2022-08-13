@@ -15,6 +15,7 @@ exports.password = (value, helpers) => {
   return value;
 };
 
+//TODO Phone Number Validation
 exports.phoneNumber = (value, helpers) => {
   if (!value.match('[0-9]{10}')) {
     return helpers.message('Please provide a valid phone number');

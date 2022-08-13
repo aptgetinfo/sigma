@@ -10,7 +10,7 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getUsers = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'role']);
+  const filter = pick(req.query, ['name', 'walletAddress']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await userService.queryUsers(filter, options);
   res.send(result);
@@ -25,12 +25,12 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  const user = await userService.updateUserById(req.params.userId, req.body, req.file);
+  const user = await userService.updateUserById(req.user.id, req.body, req.file);
   res.send(user);
 });
 
 const deleteUser = catchAsync(async (req, res) => {
-  await userService.deleteUserById(req.params.userId);
+  await userService.deleteUserById(req.user.id);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

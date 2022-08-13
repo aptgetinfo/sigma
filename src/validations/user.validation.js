@@ -1,21 +1,30 @@
 const Joi = require('joi');
-const { password, objectId, phoneNumber } = require('./custom.validation');
+const { password, objectId } = require('./custom.validation');
 
 exports.createUser = {
   body: Joi.object().keys({
     name: Joi.string().required(),
-    email: Joi.string().required().email(),
-    phoneNumber: Joi.string().required().custom(phoneNumber),
-    registerNumber: Joi.string().required().length(15),
+    email: Joi.string().email().required(),
+    phone: Joi.object().keys({
+      countryCode: Joi.string().required(),
+      number: Joi.string().required(),
+    }),
     password: Joi.string().required().custom(password),
-    role: Joi.string().required().valid('user'),
+    description: Joi.string(),
+    //TODO wallet address verification
+    walletAddress: Joi.string(),
+    //TODO link verification
+    twitter: Joi.string(),
+    discord: Joi.string(),
+    telegram: Joi.string(),
+    website: Joi.string(),
   }),
 };
 
 exports.getUsers = {
   query: Joi.object().keys({
     name: Joi.string(),
-    role: Joi.string(),
+    walletAddress: Joi.string(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
@@ -29,27 +38,27 @@ exports.getUser = {
 };
 
 exports.updateUser = {
-  params: Joi.object().keys({
-    userId: Joi.required().custom(objectId),
-  }),
   body: Joi.object()
     .keys({
-      name: Joi.string(),
+      name: Joi.string().required(),
       email: Joi.string().email(),
-      phoneNumber: Joi.string().required().custom(phoneNumber),
-      registerNumber: Joi.string().required().length(15),
-      password: Joi.string().custom(password),
-      address: Joi.object.keys({
-        street: Joi.string(),
-        houseNumber: Joi.string(),
-        landmark: Joi.string(),
+      phone: Joi.object().keys({
+        countryCode: Joi.string(),
+        number: Joi.string(),
       }),
+      password: Joi.string().custom(password),
+      description: Joi.string(),
+      walletAddress: Joi.string(),
+      twitter: Joi.string(),
+      discord: Joi.string(),
+      telegram: Joi.string(),
+      website: Joi.string(),
     })
     .min(1),
 };
 
-exports.deleteUser = {
-  params: Joi.object().keys({
-    userId: Joi.string().custom(objectId),
-  }),
-};
+// exports.deleteUser = {
+//   params: Joi.object().keys({
+//     userId: Joi.string().custom(objectId),
+//   }),
+// };
