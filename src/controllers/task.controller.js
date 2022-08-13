@@ -5,12 +5,13 @@ const catchAsync = require('../utils/catchAsync');
 const { taskService } = require('../services');
 
 const createTask = catchAsync(async (req, res) => {
+  Object.assign(req.body, { userId: req.user.id });
   const task = await taskService.createTask(req.body);
   res.status(httpStatus.CREATED).send(task);
 });
 
 const getTasks = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'category', 'blockchain']);
+  const filter = pick(req.query, ['name', 'communityId', 'submissionType', 'rewards', 'taskLevel', 'conditionLevel']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await taskService.queryTasks(filter, options);
   res.send(result);
@@ -25,12 +26,12 @@ const getTask = catchAsync(async (req, res) => {
 });
 
 const updateTask = catchAsync(async (req, res) => {
-  const task = await taskService.updateTaskById(req.params.taskId, req.body, req.file);
+  const task = await taskService.updateTaskById(req.user.id, req.params.taskId, req.body, req.file);
   res.send(task);
 });
 
 const deleteTask = catchAsync(async (req, res) => {
-  await taskService.deleteTaskById(req.params.taskId);
+  await taskService.deleteTaskById(req.user.id, req.params.taskId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 

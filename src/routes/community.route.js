@@ -1,8 +1,8 @@
 const express = require('express');
 const auth = require('../middlewares/auth');
 const validate = require('../middlewares/validate');
-const communityValidation = require('../validations/community.validation');
-const communityController = require('../controllers/community.controller');
+const { communityValidation } = require('../validations');
+const { communityController } = require('../controllers');
 
 const router = express.Router();
 

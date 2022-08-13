@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { setLastUpdated } = require('./task.methods');
 const { toJSON, paginate } = require('../plugins');
+const submissionType = require('../../config/submissionType');
 
 const taskSchema = mongoose.Schema({
   name: {
@@ -8,45 +9,44 @@ const taskSchema = mongoose.Schema({
     required: [true, 'Task Name Required'],
     trim: true,
   },
-  description: {
+  mission: {
     type: String,
-    required: [true, 'A task must have a description'],
   },
-  price: {
-    type: Number,
-    required: [true, 'A task must have a price'],
+  guidelines: {
+    type: String,
   },
-  isActive: {
-    type: Boolean,
-    default: false,
+  submissionDetails: {
+    type: String,
   },
   submissionType: {
     type: String,
     required: [true, 'A task must have a submission type'],
-    enum: {
-      values: ['url', 'image', 'text', 'home', 'twitter', 'join discord'],
-      message: 'Submission type must be either: url, image, text, home, twitter, or join discord',
-    },
-  },
-  recurrence: {
-    type: String,
-    required: [true, 'A task must have a recurrence'],
-    enum: {
-      values: ['once', 'daily', 'weekly', 'monthly'],
-      message: 'Recurrence must be either: once, daily, weekly or monthly',
-    },
+    enum: [...submissionType],
   },
   rewards: {
     type: Number,
-    default: 100,
+    default: 10,
     required: [true, 'A task must have a reward'],
   },
-  condition: {
-    type: String,
-    enum: {
-      values: ['quest', 'level', 'date', 'discord role', 'max claims', 'invitees'],
-      message: 'Condition must be either: quest, level, date, discord role, max claims, or invitees',
-    },
+  taskLevel: {
+    type: Number,
+    required: [true, 'A task must have a task level'],
+    default: 1,
+    max: 10,
+  },
+  conditionLevel: {
+    type: Number,
+    default: 0,
+    max: 10,
+  },
+  isLive: {
+    type: Boolean,
+    default: false,
+  },
+  communityId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Community',
+    required: [true, 'A task must belong to a community'],
   },
   dateOfEntry: {
     type: Date,
