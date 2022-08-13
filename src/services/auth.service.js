@@ -1,7 +1,8 @@
 const httpStatus = require('http-status');
 const tokenService = require('./token.service');
 const userService = require('./user.service');
-const Token = require('../models/token.model');
+const twilioService = require('./twillo.service');
+const { Token } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 
@@ -49,17 +50,27 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
   }
 };
 
-const verifyEmail = async (verifyEmailToken) => {
+const verifyEmail = async (user, code) => {
   try {
-    const verifyEmailTokenDoc = await tokenService.verifyToken(verifyEmailToken, tokenTypes.VERIFY_EMAIL);
-    const user = await userService.getUserById(verifyEmailTokenDoc.user);
-    if (!user) {
+    const verified = await twilioService.verifyEmail(user.email, code);
+    if (!verified) {
       throw new Error();
     }
-    await Token.deleteMany({ user: user.id, type: tokenTypes.VERIFY_EMAIL });
     await userService.updateUserById(user.id, { isEmailVerified: true });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');
+  }
+};
+
+const verifyPhone = async (user, code) => {
+  try {
+    const verified = await twilioService.verifyEmail(user.phone, code);
+    if (!verified) {
+      throw new Error();
+    }
+    await userService.updateUserById(user.id, { isPhoneVerified: true });
+  } catch (error) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Phone verification failed');
   }
 };
 
@@ -69,4 +80,5 @@ module.exports = {
   refreshAuth,
   resetPassword,
   verifyEmail,
+  verifyPhone,
 };

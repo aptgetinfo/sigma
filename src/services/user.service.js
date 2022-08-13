@@ -16,9 +16,6 @@ const createUser = async (userBody) => {
   if (await User.isPhoneTaken(userBody.phone)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Phone already taken');
   }
-  if (await User.isRegisterTaken(userBody.registerNumber)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Register Number already taken');
-  }
   return User.create(userBody);
 };
 
@@ -28,10 +25,8 @@ const queryUsers = async (filter, options) => {
 };
 
 const getUserById = async (id) => User.findById(id);
-
 const getUserByEmail = async (email) => User.findOne({ email });
-// const getUserByPhone = async (phone) => User.findOne({ phone });
-// const getUserByRegister = async (registerNumber) => User.findOne({ registerNumber });
+const getUserByPhone = async (phone) => User.findOne({ phone });
 
 const updateUserById = async (userId, updateBody, file) => {
   const user = await getUserById(userId);
@@ -43,9 +38,6 @@ const updateUserById = async (userId, updateBody, file) => {
   }
   if (updateBody.phone && (await User.isPhoneTaken(updateBody.phone, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Phone already taken');
-  }
-  if (updateBody.registerNumber && (await User.isRegisterTaken(updateBody.registerNumber, userId))) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Register Number already taken');
   }
   if (file) {
     updateBody.image = await resizeUserPhoto(file);
@@ -69,6 +61,7 @@ module.exports = {
   queryUsers,
   getUserById,
   getUserByEmail,
+  getUserByPhone,
   updateUserById,
   deleteUserById,
 };

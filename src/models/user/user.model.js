@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
-const { getOtp, matchOtp, isPasswordMatch } = require('./user.methods');
+const { isPasswordMatch, setLastUpdated } = require('./user.methods');
 const { isEmailTaken, isPhoneTaken } = require('./user.statics');
 const { toJSON, paginate } = require('../plugins');
 
@@ -45,7 +45,6 @@ const userSchema = mongoose.Schema({
   },
   description: {
     type: String,
-    required: [true, 'Description Required'],
   },
   image: {
     type: String,
@@ -109,10 +108,12 @@ const userSchema = mongoose.Schema({
   isEmailVerified: {
     type: Boolean,
     default: false,
+    private: true,
   },
   isPhoneVerified: {
     type: Boolean,
     default: false,
+    private: true,
   },
   isActive: {
     type: Boolean,
@@ -144,8 +145,7 @@ userSchema.pre('save', async function (next) {
   }
   next();
 });
-userSchema.methods.getOtp = getOtp;
-userSchema.methods.matchOtp = matchOtp;
+userSchema.methods.setLastUpdated = setLastUpdated;
 userSchema.methods.isPasswordMatch = isPasswordMatch;
 userSchema.statics.isEmailTaken = isEmailTaken;
 userSchema.statics.isPhoneTaken = isPhoneTaken;

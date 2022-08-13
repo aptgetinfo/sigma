@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const speakeasy = require('speakeasy');
+// const speakeasy = require('speakeasy');
 const httpStatus = require('http-status');
 const config = require('../config/config');
 const userService = require('./user.service');
@@ -16,19 +16,6 @@ const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
     type,
   };
   return jwt.sign(payload, secret);
-};
-
-const generateOtp = (expires) => {
-  const otpSecret = speakeasy.generateSecret();
-  const otp = speakeasy.totp({
-    secret: otpSecret.base32,
-    encoding: 'base32',
-    time: expires.unix(),
-  });
-  return {
-    otpSecret,
-    otp,
-  };
 };
 
 const saveToken = async (token, userId, expires, type, blacklisted = false) => {
@@ -47,30 +34,6 @@ const verifyToken = async (token, type) => {
   const tokenDoc = await Token.findOne({ token, type, user: payload.sub, blacklisted: false });
   if (!tokenDoc) {
     throw new Error('Token not found');
-  }
-  return tokenDoc;
-};
-
-const generateOtpTokens = async (user, type) => {
-  const tokenExpires = moment().add(config.jwt.otpExpirationMinutes, 'minutes');
-  const token = generateOtp(tokenExpires);
-  await saveToken(token.otpSecret, user.id, tokenExpires, type);
-  return token.otp;
-};
-
-const validateOtp = async (otp, type, user) => {
-  const tokenDoc = await Token.findOne({ type, user, blacklisted: false });
-  if (!tokenDoc) {
-    throw new Error('Token not found');
-  }
-  const isValid = await speakeasy.totp.verify({
-    secret: tokenDoc.token,
-    encoding: 'base32',
-    token: otp,
-    time: Date.parse(tokenDoc.expires) / 1000,
-  });
-  if (!isValid) {
-    throw new Error('Invalid OTP');
   }
   return tokenDoc;
 };
@@ -106,18 +69,10 @@ const generateResetPasswordToken = async (email) => {
   return resetPasswordToken;
 };
 
-const generateVerifyEmailToken = async (user) => {
-  const expires = moment().add(config.jwt.verifyEmailExpirationMinutes, 'minutes');
-  const verifyEmailToken = generateToken(user.id, expires, tokenTypes.VERIFY_EMAIL);
-  await saveToken(verifyEmailToken, user.id, expires, tokenTypes.VERIFY_EMAIL);
-  return verifyEmailToken;
-};
-
 module.exports = {
   generateToken,
   saveToken,
   verifyToken,
   generateAuthTokens,
   generateResetPasswordToken,
-  generateVerifyEmailToken,
 };

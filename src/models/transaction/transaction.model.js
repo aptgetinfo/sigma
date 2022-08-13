@@ -24,7 +24,6 @@ const transactionSchema = mongoose.Schema({
   },
   paidOn: {
     type: Date,
-    default: new Date(),
   },
   dateOfEntry: {
     type: Date,
