@@ -8,13 +8,13 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageCommunitys'), validate(communityValidation.createCommunity), communityController.createCommunity)
-  .get(auth('getCommunitys'), validate(communityValidation.getCommunitys), communityController.getCommunitys);
+  .post(auth(), validate(communityValidation.createCommunity), communityController.createCommunity)
+  .get(auth(), validate(communityValidation.getCommunitys), communityController.getCommunitys);
 
 router
   .route('/:communityId')
-  .get(auth('getCommunitys'), validate(communityValidation.getCommunity), communityController.getCommunity)
-  .patch(auth('manageCommunitys'), validate(communityValidation.updateCommunity), communityController.updateCommunity)
-  .delete(auth('manageCommunitys'), validate(communityValidation.deleteCommunity), communityController.deleteCommunity);
+  .get(auth(), validate(communityValidation.getCommunity), communityController.getCommunity)
+  .patch(auth(), validate(communityValidation.updateCommunity), communityController.updateCommunity)
+  .delete(auth(), validate(communityValidation.deleteCommunity), communityController.deleteCommunity);
 
 module.exports = router;

@@ -1,6 +1,5 @@
 const allRoles = {
   user: [],
-  merchant: [],
   admin: ['getUsers', 'manageUsers'],
 };
 
