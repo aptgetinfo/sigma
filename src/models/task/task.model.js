@@ -8,10 +8,6 @@ const taskSchema = mongoose.Schema({
     required: [true, 'Task Name Required'],
     trim: true,
   },
-  image: {
-    type: String,
-    required: [true, 'A task must have a cover image'],
-  },
   description: {
     type: String,
     required: [true, 'A task must have a description'],
@@ -51,10 +47,6 @@ const taskSchema = mongoose.Schema({
       values: ['quest', 'level', 'date', 'discord role', 'max claims', 'invitees'],
       message: 'Condition must be either: quest, level, date, discord role, max claims, or invitees',
     },
-  },
-  totalQuest: {
-    type: Number,
-    default: 0,
   },
   dateOfEntry: {
     type: Date,
