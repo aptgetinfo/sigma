@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const { setLastUpdated } = require('./community.methods');
+const { isNameTaken } = require('./community.statics');
+
 const { toJSON, paginate } = require('../plugins');
 const { blockchain } = require('../../config/blockchain');
 const { category } = require('../../config/category');
@@ -8,6 +10,7 @@ const communitySchema = mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Community Name Required'],
+    unique: true,
     trim: true,
   },
   description: {
@@ -52,6 +55,7 @@ const communitySchema = mongoose.Schema({
   twitter: {
     type: String,
     trim: true,
+    required: [true, 'Twitter handle is required'],
   },
   telegram: {
     type: String,
@@ -60,6 +64,7 @@ const communitySchema = mongoose.Schema({
   discord: {
     type: String,
     trim: true,
+    required: [true, 'Discord handle is required'],
   },
   website: {
     type: String,
@@ -82,6 +87,7 @@ const communitySchema = mongoose.Schema({
 communitySchema.plugin(toJSON);
 communitySchema.plugin(paginate);
 communitySchema.methods.setLastUpdated = setLastUpdated;
+communitySchema.statics.isNameTaken = isNameTaken;
 
 const Community = mongoose.model('Community', communitySchema);
 

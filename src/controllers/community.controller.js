@@ -5,6 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const { communityService } = require('../services');
 
 const createCommunity = catchAsync(async (req, res) => {
+  Object.assign(req.body, { admin: req.user.id });
   const community = await communityService.createCommunity(req.body);
   res.status(httpStatus.CREATED).send(community);
 });
@@ -25,12 +26,12 @@ const getCommunity = catchAsync(async (req, res) => {
 });
 
 const updateCommunity = catchAsync(async (req, res) => {
-  const community = await communityService.updateCommunityById(req.params.communityId, req.body, req.file);
+  const community = await communityService.updateCommunityById(req.user.id, req.params.communityId, req.body, req.file);
   res.send(community);
 });
 
 const deleteCommunity = catchAsync(async (req, res) => {
-  await communityService.deleteCommunityById(req.params.communityId);
+  await communityService.deleteCommunityById(req.user.id, req.params.communityId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
