@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { setLastUpdated } = require('./transaction.methods');
 const { toJSON, paginate } = require('../plugins');
+const { isTranscationDone } = require('./transaction.statics');
 
 const transactionSchema = mongoose.Schema({
   userId: {
@@ -16,6 +17,11 @@ const transactionSchema = mongoose.Schema({
   communityId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Community',
+    required: true,
+  },
+  submissionId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Submission',
     required: true,
   },
   isPaid: {
@@ -38,6 +44,7 @@ const transactionSchema = mongoose.Schema({
 transactionSchema.plugin(toJSON);
 transactionSchema.plugin(paginate);
 transactionSchema.methods.setLastUpdated = setLastUpdated;
+transactionSchema.statics.isTranscationDone = isTranscationDone;
 
 const Transaction = mongoose.model('Transaction', transactionSchema);
 

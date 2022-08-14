@@ -4,6 +4,7 @@ const userRoute = require('./user.route');
 const communityRoute = require('./community.route');
 const taskRoute = require('./task.route');
 const submissionRoute = require('./submission.route');
+const transactionRoute = require('./transaction.route');
 
 const router = express.Router();
 
@@ -27,6 +28,10 @@ const defaultRoutes = [
   {
     path: '/submission',
     route: submissionRoute,
+  },
+  {
+    path: '/transaction',
+    route: transactionRoute,
   },
 ];
 
