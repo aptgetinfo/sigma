@@ -5,3 +5,4 @@ exports.userService = require('./user.service');
 exports.twilioService = require('./twillo.service');
 exports.communityService = require('./community.service');
 exports.taskService = require('./task.service');
+exports.submissionService = require('./submission.service');
