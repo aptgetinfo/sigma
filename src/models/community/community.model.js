@@ -20,7 +20,7 @@ const communitySchema = mongoose.Schema({
   category: [
     {
       type: String,
-      enum: [...category],
+      enum: category,
       required: [true, 'Category Required'],
     },
   ],
@@ -30,7 +30,7 @@ const communitySchema = mongoose.Schema({
   },
   blockchain: {
     type: String,
-    enum: [...blockchain],
+    enum: blockchain,
     required: [true, 'A community must have a blockchain'],
   },
   admin: {

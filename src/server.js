@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 process.on('uncaughtException', (error) => {
   console.log('🔴 UNCAUGHT EXCEPTION!');
-  console.info(error.name, error.message);
+  console.info(error);
   console.info('⚠️ Server Closed!');
   process.exit(1);
 });

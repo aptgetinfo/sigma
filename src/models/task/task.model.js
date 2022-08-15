@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { setLastUpdated } = require('./task.methods');
 const { toJSON, paginate } = require('../plugins');
-const submissionType = require('../../config/submissionType');
+const { submissionType } = require('../../config/submissionType');
 
 const taskSchema = mongoose.Schema({
   name: {
@@ -21,7 +21,7 @@ const taskSchema = mongoose.Schema({
   submissionType: {
     type: String,
     required: [true, 'A task must have a submission type'],
-    enum: [...submissionType],
+    enum: submissionType,
   },
   rewards: {
     type: Number,

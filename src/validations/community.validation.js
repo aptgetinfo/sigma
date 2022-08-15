@@ -7,12 +7,8 @@ exports.createCommunity = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     description: Joi.string(),
-    category: Joi.array()
-      .items(Joi.string().valid(...category))
-      .required(),
-    blockchain: Joi.string()
-      .valid(...blockchain)
-      .required(),
+    category: Joi.array().items(Joi.string().valid(category)).required(),
+    blockchain: Joi.string().valid(blockchain).required(),
     twitter: Joi.string().trim().required(),
     telegram: Joi.string().trim(),
     discord: Joi.string().trim().required(),
@@ -45,8 +41,8 @@ exports.updateCommunity = {
   body: Joi.object()
     .keys({
       name: Joi.string(),
-      category: Joi.array().items(Joi.string().valid(...category)),
-      blockchain: Joi.string().valid(...blockchain),
+      category: Joi.array().items(Joi.string().valid(category)),
+      blockchain: Joi.string().valid(blockchain),
       description: Joi.string(),
       twitter: Joi.string().trim(),
       telegram: Joi.string().trim(),
