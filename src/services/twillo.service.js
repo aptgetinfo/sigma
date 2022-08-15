@@ -8,7 +8,7 @@ const client = new Twilio(config.twilio.account_sid, config.twilio.auth_token).v
 exports.sendVerificationSms = async (phone) => {
   try {
     await client.verifications.create({
-      to: `+${phone.countryCode}${phone.phoneNumber}`,
+      to: `+${phone.countryCode}${phone.number}`,
       channel: 'sms',
     });
   } catch (err) {
