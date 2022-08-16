@@ -27,8 +27,8 @@ exports.sendVerificationEmail = async (email) => {
   }
 };
 
-exports.verifySms = async (phone, code) => {
-  const verification = await client.verificationChecks.create({ to: `+${phone.countryCode}${phone.phoneNumber}`, code });
+exports.verifyPhone = async (phone, code) => {
+  const verification = await client.verificationChecks.create({ to: `+${phone.countryCode}${phone.number}`, code });
   return verification.status === 'approved';
 };
 

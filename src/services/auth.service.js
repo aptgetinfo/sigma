@@ -64,7 +64,7 @@ const verifyEmail = async (user, code) => {
 
 const verifyPhone = async (user, code) => {
   try {
-    const verified = await twilioService.verifyEmail(user.phone, code);
+    const verified = await twilioService.verifyPhone(user.phone, code);
     if (!verified) {
       throw new Error();
     }

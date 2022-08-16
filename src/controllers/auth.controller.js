@@ -13,7 +13,7 @@ const registerVerification = catchAsync(async (req, res) => {
   const { email, password, phoneCode, emailCode } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   await authService.verifyEmail(user, emailCode);
-  await authService.verifySms(user, phoneCode);
+  await authService.verifyPhone(user, phoneCode);
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });
 });
