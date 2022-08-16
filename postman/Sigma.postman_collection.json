@@ -38,7 +38,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"deepak.2002.02.16@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"name\":\"Deepak Kumar\",\n    \"phone\":{\n        \"countryCode\":\"91\",\n        \"number\":\"6204708461\"\n    }\n}",
+							"raw": "{\n    \"email\":\"sreyom31@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"name\":\"Deepak Kumar\",\n    \"phone\":{\n        \"countryCode\":\"91\",\n        \"number\":\"6204708461\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -60,12 +60,25 @@
 				},
 				{
 					"name": "Register Verification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var tokens=pm.response.json().data.users.tokens;",
+									"pm.environment.set('access_token',tokens.access.token);",
+									"pm.environment.set('refresh_token',token.refresh.token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"deepak.2002.02.16@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"phoneCode\":\"227261\",\n    \"emailCode\":\"227261\"\n}",
+							"raw": "{\n    \"email\":\"sreyom31@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"phoneCode\":\"746146\",\n    \"emailCode\":\"934299\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -84,10 +97,87 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"sreyom31@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"type\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Verification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var tokens=pm.response.json().tokens;",
+									"pm.environment.set('access_token',tokens.access.token);",
+									"pm.environment.set('refresh_token',tokens.refresh.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"sreyom31@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"type\":1,\n    \"code\": \"618832\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/loginVerification",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"loginVerification"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -116,6 +206,16 @@
 		},
 		{
 			"key": "auth_key",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "{access_token}",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "{refresh_token}",
 			"value": "",
 			"type": "string"
 		}
