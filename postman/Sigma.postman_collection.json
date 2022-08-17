@@ -164,6 +164,51 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Send Verification SMS",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/auth/send-verification-sms",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"send-verification-sms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\":\"{{refresh_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}
@@ -173,7 +218,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "",
+				"value": "{{access_token}}",
 				"type": "string"
 			}
 		]

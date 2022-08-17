@@ -16,7 +16,7 @@ router.post('/forgot-password', validate(authValidation.forgotPassword), authCon
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 //TODO remove auth from this route
 router.post('/send-verification-email', auth(), authController.sendVerificationEmail);
-router.post('/send-verification-sms', auth(), authController.sendVerificationEmail);
+router.post('/send-verification-sms', auth(), authController.sendVerificationSms);
 router.post('/verify-email', auth(), validate(authValidation.verifyEmail), authController.verifyEmail);
 router.post('/verify-sms', auth(), validate(authValidation.verifySms), authController.verifySms);
 
