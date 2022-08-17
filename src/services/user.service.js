@@ -30,6 +30,7 @@ const getUserByPhone = async (phone) => User.findOne({ phone });
 
 const updateUserById = async (userId, updateBody, file) => {
   const user = await getUserById(userId);
+  // TODO change email and sms to unverified if update is triggered
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }

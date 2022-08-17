@@ -48,7 +48,9 @@ exports.updateUser = {
       }),
       password: Joi.string().custom(password),
       description: Joi.string(),
+      // TODO wallet address verificationChecks
       walletAddress: Joi.string(),
+      // TODO link verificationChecks
       twitter: Joi.string(),
       discord: Joi.string(),
       telegram: Joi.string(),
