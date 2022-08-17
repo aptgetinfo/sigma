@@ -33,11 +33,12 @@ const updateSubmissionById = async (userId, submissionId, updateBody) => {
   if (!submission) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Submission not found');
   }
-  if (!(submission.isCompleted && submission.isReviewed)) {
+  if (submission.isCompleted && submission.isReviewed) {
+    // TODO check this and condition
     throw new ApiError(httpStatus.BAD_REQUEST, 'Submission already approved');
   }
   const community = await communityService.getCommunityById(submission.communityId);
-  if (userId !== community.admin) {
+  if (userId !== community.admin.toString()) {
     throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this submission');
   }
   //TODO taransaction to be done
@@ -52,7 +53,7 @@ const deleteSubmissionById = async (userId, submissionId) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Submission not found');
   }
   const community = await communityService.getCommunityById(submission.communityId);
-  if (userId !== community.admin) {
+  if (userId !== community.admin.toString()) {
     throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this submission');
   }
   await submission.remove();

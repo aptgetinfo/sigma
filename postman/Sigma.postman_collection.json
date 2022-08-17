@@ -208,7 +208,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"sreyom31@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"type\":1,\n    \"code\": \"618832\"\n}",
+							"raw": "{\n    \"email\":\"sreyom31@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"type\":1,\n    \"code\": \"648620\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -435,6 +435,385 @@
 							"path": [
 								"auth",
 								"verify-sms"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Community",
+			"item": [
+				{
+					"name": "Get All Communities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/community",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"community"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Community",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/community/62fcd515be1d31e95a8bb113",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"community",
+								"62fcd515be1d31e95a8bb113"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Community",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Community\",\n    \"description\": \"This community is for testing\",\n    \"category\": [\n        \"nft\",\n        \"dao\"\n    ],\n    \"blockchain\": \"ethereum\",\n    \"twitter\": \"https://stackoverflow.com/t\",\n    \"discord\": \"https://stackoverflow.com/d\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/community",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"community"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Community",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"The Test Blockchain Community\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/community/62fcd515be1d31e95a8bb113",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"community",
+								"62fcd515be1d31e95a8bb113"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Community",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/community/62fcd515be1d31e95a8bb113",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"community",
+								"62fcd515be1d31e95a8bb113"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task",
+			"item": [
+				{
+					"name": "Get All Task",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/task?communityId=62fd1280cc61895c9ab66b17",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"task"
+							],
+							"query": [
+								{
+									"key": "communityId",
+									"value": "62fd1280cc61895c9ab66b17"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"communityId\": \"62fd1280cc61895c9ab66b17\",\n    \"name\": \"Task 1\",\n    \"mission\": \"Some Mission\",\n    \"guidelines\": \"Some Guidelines\",\n    \"submissionDetails\": \"Some Details\",\n    \"submissionType\": \"none\",\n    \"rewards\": 100,\n    \"taskLevel\": 1,\n    \"conditionLevel\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/task",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Task",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/task/62fd1323ed844d6759fb1445",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"task",
+								"62fd1323ed844d6759fb1445"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Mission Name Changed\",\n    \"mission\": \"Mission Changed\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/task/62fd1323ed844d6759fb1445",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"task",
+								"62fd1323ed844d6759fb1445"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/task/62fd1323ed844d6759fb1445",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"task",
+								"62fd1323ed844d6759fb1445"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Get All Transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/transaction",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Transaction",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/transaction/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"transaction",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Submission",
+			"item": [
+				{
+					"name": "Get All Submissions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/submission",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"submission"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Submission",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/submission/62fd17cded844d6759fb1477",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"submission",
+								"62fd17cded844d6759fb1477"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Submission",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"taskId\":\"62fd16faed844d6759fb1464\",\n    \"entry\":\"Entry will decide later\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/submission",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"submission"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Submission",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"isReviewed\":true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/submission/62fd17cded844d6759fb1477",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"submission",
+								"62fd17cded844d6759fb1477"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Submission",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/submission/62fd17cded844d6759fb1477",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"submission",
+								"62fd17cded844d6759fb1477"
 							]
 						}
 					},

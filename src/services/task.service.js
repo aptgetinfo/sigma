@@ -8,7 +8,7 @@ const createTask = async (taskBody) => {
   if (!community) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Community not found');
   }
-  if (community.admin !== taskBody.userId) {
+  if (taskBody.userId !== community.admin.toString()) {
     throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to create a task');
   }
   return Task.create(taskBody);
@@ -31,7 +31,7 @@ const updateTaskById = async (userId, taskId, updateBody) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
   }
-  if (userId !== community.admin) {
+  if (userId !== community.admin.toString()) {
     throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this community');
   }
   Object.assign(task, updateBody);
@@ -48,7 +48,7 @@ const deleteTaskById = async (userId, taskId) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
   }
-  if (userId !== community.admin) {
+  if (userId !== community.admin.toString()) {
     throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this community');
   }
   await task.remove();
