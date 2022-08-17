@@ -1,0 +1,609 @@
+{
+	"info": {
+		"_postman_id": "b13b3056-870e-44d4-b7b9-1d5e823e566a",
+		"name": "Sigma",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15049169"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/62fb770ef4819c747e04742a",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"62fb770ef4819c747e04742a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Sreyom Sreesan\",\n    \"description\":\"I am Just Testing the backend, nothing else\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/62fb770ef4819c747e04742a",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"62fb770ef4819c747e04742a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/62fb770ef4819c747e04742a",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"62fb770ef4819c747e04742a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"sreyom31@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"name\":\"Deepak Kumar\",\n    \"phone\":{\n        \"countryCode\":\"91\",\n        \"number\":\"6204708461\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register Verification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var tokens=pm.response.json().data.users.tokens;",
+									"pm.environment.set('access_token',tokens.access.token);",
+									"pm.environment.set('refresh_token',token.refresh.token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"sreyom31@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"phoneCode\":\"746146\",\n    \"emailCode\":\"934299\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/registerVerification",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"registerVerification"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"sreyom31@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"type\":1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login Verification",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var tokens=pm.response.json().tokens;",
+									"pm.environment.set('access_token',tokens.access.token);",
+									"pm.environment.set('refresh_token',tokens.refresh.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"sreyom31@gmail.com\",\n    \"password\":\"Test@1password\",\n    \"type\":1,\n    \"code\": \"618832\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/loginVerification",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"loginVerification"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Verification SMS",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/auth/send-verification-sms",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"send-verification-sms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Verification Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/auth/send-verification-email",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"send-verification-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\":\"{{refresh_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/logout",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Tokens",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var tokens=pm.response.json();",
+									"pm.environment.set('access_token',tokens.access.token);",
+									"pm.environment.set('refresh_token',tokens.refresh.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\":\"{{refresh_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/refresh-tokens",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"refresh-tokens"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"sreyom31@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/forgot-password",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\":\"SomeNewPassword123#\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/reset-password/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"reset-password",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\":\"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/verify-email",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"verify-email"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify SMS",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\":\"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/verify-sms",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"verify-sms"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Community",
+			"item": [
+				{
+					"name": "Get All Communities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/community",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"community"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Community",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/community/62fcd515be1d31e95a8bb113",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"community",
+								"62fcd515be1d31e95a8bb113"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Community",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Community\",\n    \"description\": \"This community is for testing\",\n    \"category\": [\n        \"nft\",\n        \"dao\"\n    ],\n    \"blockchain\": \"ethereum\",\n    \"twitter\": \"https://stackoverflow.com/t\",\n    \"discord\": \"https://stackoverflow.com/d\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/community",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"community"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Community",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"The Test Blockchain Community\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/community/62fcd515be1d31e95a8bb113",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"community",
+								"62fcd515be1d31e95a8bb113"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Community",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/community/62fcd515be1d31e95a8bb113",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"community",
+								"62fcd515be1d31e95a8bb113"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "auth_key",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "{access_token}",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "{refresh_token}",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

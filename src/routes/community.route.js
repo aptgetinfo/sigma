@@ -9,11 +9,11 @@ const router = express.Router();
 router
   .route('/')
   .post(auth(), validate(communityValidation.createCommunity), communityController.createCommunity)
-  .get(auth(), validate(communityValidation.getCommunitys), communityController.getCommunitys);
+  .get(validate(communityValidation.getCommunitys), communityController.getCommunitys);
 
 router
   .route('/:communityId')
-  .get(auth(), validate(communityValidation.getCommunity), communityController.getCommunity)
+  .get(validate(communityValidation.getCommunity), communityController.getCommunity)
   .patch(auth(), validate(communityValidation.updateCommunity), communityController.updateCommunity)
   .delete(auth(), validate(communityValidation.deleteCommunity), communityController.deleteCommunity);
 

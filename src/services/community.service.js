@@ -22,7 +22,8 @@ const updateCommunityById = async (userId, communityId, updateBody) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
   }
-  if (userId !== community.admin) {
+  if (userId !== community.admin.toString()) {
+    // TODO: add string to object id
     throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this community');
   }
   if (updateBody.name && (await Community.isNameTaken(updateBody.name, communityId))) {
@@ -38,7 +39,7 @@ const deleteCommunityById = async (userId, communityId) => {
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
   }
-  if (userId !== community.admin) {
+  if (userId !== community.admin.toString()) {
     throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to delete this community');
   }
   await community.remove();

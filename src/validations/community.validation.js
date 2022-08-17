@@ -7,13 +7,18 @@ exports.createCommunity = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     description: Joi.string(),
-    category: Joi.array().items(Joi.string().valid(category)).required(),
-    blockchain: Joi.string().valid(blockchain).required(),
-    twitter: Joi.string().trim().required(),
-    telegram: Joi.string().trim(),
-    discord: Joi.string().trim().required(),
-    website: Joi.string().trim(),
-    opensea: Joi.string().trim(),
+    category: Joi.array()
+      .items(Joi.string().valid(...Object.values(category)))
+      .required(),
+    blockchain: Joi.string()
+      .valid(...Object.values(blockchain))
+      .required(),
+    // TODO: uri validation to be added in other schemas
+    twitter: Joi.string().uri().trim().required(),
+    telegram: Joi.string().uri().trim(),
+    discord: Joi.string().uri().trim().required(),
+    website: Joi.string().uri().trim(),
+    opensea: Joi.string().uri().trim(),
   }),
 };
 
@@ -41,7 +46,7 @@ exports.updateCommunity = {
   body: Joi.object()
     .keys({
       name: Joi.string(),
-      category: Joi.array().items(Joi.string().valid(category)),
+      category: Joi.array().items(Joi.string().valid(...Object.values(category))),
       blockchain: Joi.string().valid(blockchain),
       description: Joi.string(),
       twitter: Joi.string().trim(),

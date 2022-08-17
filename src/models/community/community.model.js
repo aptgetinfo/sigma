@@ -26,7 +26,8 @@ const communitySchema = mongoose.Schema({
   ],
   image: {
     type: String,
-    required: [true, 'A community must have a cover image'],
+    // TODO: image validation to be added back
+    // required: [true, 'A community must have a cover image'],
   },
   blockchain: {
     type: String,
