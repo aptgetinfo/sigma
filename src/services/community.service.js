@@ -17,7 +17,7 @@ const queryCommunitys = async (filter, options) => {
 const getCommunityById = async (id) => Community.findById(id);
 const getCommunityByName = async (name) => Community.findOne({ name });
 
-const updateCommunityById = async (userId, communityId, updateBody) => {
+const updateCommunityById = async (userId, communityId, updateBody, file) => {
   const community = await getCommunityById(communityId);
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
@@ -29,6 +29,7 @@ const updateCommunityById = async (userId, communityId, updateBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Name already taken');
   }
   Object.assign(community, updateBody);
+  if (file) Object.assign(updateBody, { image: file.filename });
   await community.save();
   return community;
 };

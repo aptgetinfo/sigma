@@ -39,7 +39,7 @@ exports.getUser = {
 exports.updateUser = {
   body: Joi.object()
     .keys({
-      name: Joi.string().required(),
+      name: Joi.string(),
       email: Joi.string().email(),
       phone: Joi.object().keys({
         countryCode: Joi.string(),
@@ -56,6 +56,7 @@ exports.updateUser = {
       website: Joi.string(),
     })
     .min(1),
+  file: Joi.any(),
 };
 
 // exports.deleteUser = {

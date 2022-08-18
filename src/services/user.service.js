@@ -1,13 +1,6 @@
 const httpStatus = require('http-status');
-const sharp = require('sharp');
 const { User } = require('../models');
 const ApiError = require('../utils/ApiError');
-
-const resizeUserPhoto = async (userId, file) => {
-  const filename = `user-${userId}-${Date.now()}.jpeg`;
-  await sharp(file.buffer).resize(500, 500).toFormat('jpeg').jpeg({ quality: 90 }).toFile(`public/img/users/${filename}`);
-  return filename;
-};
 
 const createUser = async (userBody) => {
   if (await User.isEmailTaken(userBody.email)) {
@@ -39,11 +32,9 @@ const updateUserById = async (userId, updateBody, file) => {
   if (updateBody.phone && (await User.isPhoneTaken(updateBody.phone, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Phone already taken');
   }
-  if (updateBody.email) Object.assign(user, { isEmailVerified: false });
-  if (updateBody.phone) Object.assign(user, { isPhoneVerified: false });
-  if (file) {
-    updateBody.image = await resizeUserPhoto(file);
-  }
+  if (updateBody.email) Object.assign(updateBody, { isEmailVerified: false });
+  if (updateBody.phone) Object.assign(updateBody, { isPhoneVerified: false });
+  if (file) Object.assign(updateBody, { image: file.filename });
   Object.assign(user, updateBody);
   await user.save();
   return user;

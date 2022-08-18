@@ -20,6 +20,7 @@ exports.createCommunity = {
     website: Joi.string().uri().trim(),
     opensea: Joi.string().uri().trim(),
   }),
+  file: Joi.any().required(),
 };
 
 exports.getCommunitys = {
@@ -58,6 +59,7 @@ exports.updateCommunity = {
       moderators: Joi.array().items(Joi.string().custom(objectId)),
     })
     .min(1),
+  file: Joi.any(),
 };
 
 exports.deleteCommunity = {
