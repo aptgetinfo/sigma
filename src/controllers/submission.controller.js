@@ -2,11 +2,24 @@ const httpStatus = require('http-status');
 const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
-const { submissionService } = require('../services');
+const { submissionService, transactionService, taskService } = require('../services');
 
 const createSubmission = catchAsync(async (req, res) => {
-  Object.assign(req.body, { userId: req.user.id });
+  const task = await taskService.getTaskById(req.body.taskId);
+  if (!task) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
+  }
+  Object.assign(req.body, { userId: req.user.id, submissionType: task.submissionType, communityId: task.communityId });
   const submission = await submissionService.createSubmission(req.body);
+  if (submission.isCompleted && submission.isReviewed) {
+    await transactionService.createTransaction(
+      submission.userId,
+      submission.taskId,
+      submission.communityId,
+      submission.id,
+      (price = task.reward) => price
+    );
+  }
   res.status(httpStatus.CREATED).send(submission);
 });
 
@@ -27,6 +40,9 @@ const getSubmission = catchAsync(async (req, res) => {
 
 const updateSubmission = catchAsync(async (req, res) => {
   const submission = await submissionService.updateSubmissionById(req.user.id, req.params.submissionId, req.body, req.file);
+  if (submission.isCompleted && submission.isReviewed) {
+    await transactionService.createTransaction(submission.userId, submission.taskId, submission.communityId, submission.id);
+  }
   res.send(submission);
 });
 

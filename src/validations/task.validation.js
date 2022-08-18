@@ -12,7 +12,7 @@ exports.createTask = {
     submissionType: Joi.string()
       .valid(...Object.values(submissionType))
       .required(),
-    rewards: Joi.number().required(),
+    reward: Joi.number().required(),
     taskLevel: Joi.number().required(),
     conditionLevel: Joi.number().default(0),
     isLive: Joi.boolean().default(false),
@@ -24,7 +24,7 @@ exports.getTasks = {
     name: Joi.string(),
     communityId: Joi.string().custom(objectId),
     submissionType: Joi.string().valid(...Object.values(submissionType)),
-    rewards: Joi.number(),
+    reward: Joi.number(),
     taskLevel: Joi.number(),
     conditionLevel: Joi.number(),
     sortBy: Joi.string(),
@@ -50,7 +50,7 @@ exports.updateTask = {
       guidelines: Joi.string(),
       submissionDetails: Joi.string(),
       submissionType: Joi.string().valid(...Object.values(submissionType)),
-      rewards: Joi.number(),
+      reward: Joi.number(),
       taskLevel: Joi.number(),
       conditionLevel: Joi.number(),
       isLive: Joi.boolean(),

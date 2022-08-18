@@ -24,9 +24,10 @@ const taskSchema = mongoose.Schema({
     required: [true, 'A task must have a submission type'],
     enum: submissionType,
   },
-  rewards: {
+  reward: {
     type: Number,
     default: 10,
+    min: [0, 'Reward must be more than 0'],
     required: [true, 'A task must have a reward'],
   },
   taskLevel: {
