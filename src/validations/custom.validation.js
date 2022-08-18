@@ -1,3 +1,4 @@
+/* eslint-disable security/detect-unsafe-regex */
 exports.objectId = (value, helpers) => {
   if (!value.match(/^[0-9a-fA-F]{24}$/)) {
     return helpers.message('"{{#label}}" must be a valid mongo id');
@@ -31,7 +32,7 @@ exports.isTwitterProfileLink = (value, helpers) => {
 };
 
 exports.isTelegramProfileLink = (value, helpers) => {
-  if (!value.match(/^https:\/\/telegram\.me\/[a-zA-Z0-9_]+$/)) {
+  if (!value.match(/^(https?:\/\/)?(www[.])?(telegram|t)\.me\/[a-zA-Z0-9_]+$/)) {
     return helpers.message('Please provide a valid telegram profile link');
   }
   return value;

@@ -11,7 +11,6 @@ exports.createUser = {
     }),
     password: Joi.string().required().custom(password),
     description: Joi.string(),
-    //TODO wallet address verification
     walletAddress: Joi.string(),
     //TODO link verification
     twitter: Joi.string(),
