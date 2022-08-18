@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { setLastUpdated } = require('./task.methods');
+const { isNameTaken } = require('./task.statics');
 const { toJSON, paginate } = require('../plugins');
 const { submissionType } = require('../../config/submissionType');
 
@@ -61,7 +62,7 @@ const taskSchema = mongoose.Schema({
 taskSchema.plugin(toJSON);
 taskSchema.plugin(paginate);
 taskSchema.methods.setLastUpdated = setLastUpdated;
-
+taskSchema.statics.isNameTaken = isNameTaken;
 const Task = mongoose.model('Task', taskSchema);
 
 module.exports = Task;

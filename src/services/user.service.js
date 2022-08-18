@@ -30,7 +30,6 @@ const getUserByPhone = async (phone) => User.findOne({ phone });
 
 const updateUserById = async (userId, updateBody, file) => {
   const user = await getUserById(userId);
-  // TODO change email and sms to unverified if update is triggered
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
@@ -40,6 +39,8 @@ const updateUserById = async (userId, updateBody, file) => {
   if (updateBody.phone && (await User.isPhoneTaken(updateBody.phone, userId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Phone already taken');
   }
+  if (updateBody.email) Object.assign(user, { isEmailVerified: false });
+  if (updateBody.phone) Object.assign(user, { isPhoneVerified: false });
   if (file) {
     updateBody.image = await resizeUserPhoto(file);
   }

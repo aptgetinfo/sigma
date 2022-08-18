@@ -10,9 +10,9 @@ exports.createSubmission = {
 
 exports.getSubmissions = {
   query: Joi.object().keys({
-    taskId: Joi.string(),
-    communityId: Joi.string(),
-    userId: Joi.string(),
+    taskId: Joi.string().custom(objectId),
+    communityId: Joi.string().custom(objectId),
+    userId: Joi.string().custom(objectId),
     isCompleted: Joi.boolean(),
     isReviewed: Joi.boolean(),
     sortBy: Joi.string(),

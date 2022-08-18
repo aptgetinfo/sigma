@@ -25,8 +25,8 @@ exports.createCommunity = {
 exports.getCommunitys = {
   query: Joi.object().keys({
     name: Joi.string(),
-    category: Joi.string(),
-    blockchain: Joi.string(),
+    category: Joi.array().items(Joi.string().valid(...Object.values(category))),
+    blockchain: Joi.string().valid(...Object.values(blockchain)),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),

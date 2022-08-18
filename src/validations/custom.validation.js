@@ -22,3 +22,24 @@ exports.phoneNumber = (value, helpers) => {
   }
   return value;
 };
+
+exports.isTwitterProfileLink = (value, helpers) => {
+  if (!value.match(/^https:\/\/twitter\.com\/[a-zA-Z0-9_]+$/)) {
+    return helpers.message('Please provide a valid twitter profile link');
+  }
+  return value;
+};
+
+exports.isTelegramProfileLink = (value, helpers) => {
+  if (!value.match(/^https:\/\/telegram\.me\/[a-zA-Z0-9_]+$/)) {
+    return helpers.message('Please provide a valid telegram profile link');
+  }
+  return value;
+};
+
+exports.isDiscordProfileLink = (value, helpers) => {
+  if (!value.match(/^https:\/\/discord\.gg\/[a-zA-Z0-9_]+$/)) {
+    return helpers.message('Please provide a valid discord profile link');
+  }
+  return value;
+};

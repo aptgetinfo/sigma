@@ -22,10 +22,12 @@ const queryTasks = async (filter, options) => {
 const getTaskById = async (id) => Task.findById(id);
 
 const updateTaskById = async (userId, taskId, updateBody) => {
-  //TODO Name chaek for duplicate task name
   const task = await getTaskById(taskId);
   if (!task) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
+  }
+  if (await Task.isEmailTaken(updateBody.name, task.communityId)) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Task Name already exists');
   }
   const community = await communityService.getCommunityById(task.communityId);
   if (!community) {

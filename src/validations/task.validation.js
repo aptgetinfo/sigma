@@ -23,7 +23,7 @@ exports.getTasks = {
   query: Joi.object().keys({
     name: Joi.string(),
     communityId: Joi.string().custom(objectId),
-    submissionType: Joi.string(),
+    submissionType: Joi.string().valid(...Object.values(submissionType)),
     rewards: Joi.number(),
     taskLevel: Joi.number(),
     conditionLevel: Joi.number(),
