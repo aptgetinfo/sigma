@@ -8,7 +8,6 @@ const createSubmission = async (submissionBody) => {
   if (await Submission.isTaskDone(submissionBody.taskId, submissionBody.userId)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Task already done');
   }
-  // TODO Add Condition check for task level
   if (submissionBody.submissionType === submissionType.None) {
     Object.assign(submissionBody, { isReviewed: true, isCompleted: true });
   }

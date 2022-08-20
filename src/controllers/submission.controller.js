@@ -9,6 +9,14 @@ const createSubmission = catchAsync(async (req, res) => {
   if (!task) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
   }
+  const isAllowed = await taskService.isOnRequiredLevel(
+    req.user.taskCompleted.taskId,
+    task.communityId,
+    task.conditionLevel
+  );
+  if (!isAllowed) {
+    throw new ApiError(httpStatus.FORBIDDEN, 'You need to level up to this task');
+  }
   Object.assign(req.body, { userId: req.user.id, submissionType: task.submissionType, communityId: task.communityId });
   const submission = await submissionService.createSubmission(req.body);
   if (submission.isCompleted && submission.isReviewed) {

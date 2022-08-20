@@ -57,10 +57,15 @@ const deleteTaskById = async (userId, taskId) => {
   return task;
 };
 
+const isOnRequiredLevel = async (tasks, communityId, conditionLevel) => {
+  const task = Task.find({ _id: { $in: tasks }, taskLevel: { $gte: conditionLevel }, isLive: true, communityId });
+  return !!task;
+};
 module.exports = {
   createTask,
   queryTasks,
   getTaskById,
   updateTaskById,
   deleteTaskById,
+  isOnRequiredLevel,
 };
