@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { setLastUpdated } = require('./submission.methods');
 const { isTaskDone } = require('./submission.statics');
 const { toJSON, paginate } = require('../plugins');
+const User = require('../user/user.model');
 
 const submissionSchema = mongoose.Schema({
   taskId: {
@@ -27,6 +28,10 @@ const submissionSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  rewardedAmount: {
+    type: Number,
+    default: 0,
+  },
   entry: {
     type: String,
     required: true,
@@ -43,6 +48,24 @@ const submissionSchema = mongoose.Schema({
 
 submissionSchema.plugin(toJSON);
 submissionSchema.plugin(paginate);
+submissionSchema.pre('save', async function (next) {
+  const submission = this;
+  if (submission.isModified('isCompleted')) {
+    if (submission.isCompleted) {
+      await User.findByIdAndUpdate(submission.userId, {
+        $push: {
+          completedTasks: {
+            taskId: submission.taskId,
+            communityId: submission.communityId,
+            completedAt: submission.dateOfEntry,
+            reward: submission.rewardedAmount,
+          },
+        },
+      });
+    }
+  }
+  next();
+});
 submissionSchema.methods.setLastUpdated = setLastUpdated;
 submissionSchema.statics.isTaskDone = isTaskDone;
 

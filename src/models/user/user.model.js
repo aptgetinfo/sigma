@@ -95,10 +95,6 @@ const userSchema = mongoose.Schema({
       completedAt: {
         type: Date,
       },
-      approvedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-      },
       reward: {
         type: Number,
         default: 0,

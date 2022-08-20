@@ -17,7 +17,12 @@ const createSubmission = catchAsync(async (req, res) => {
   if (!isAllowed) {
     throw new ApiError(httpStatus.FORBIDDEN, 'You need to level up to this task');
   }
-  Object.assign(req.body, { userId: req.user.id, submissionType: task.submissionType, communityId: task.communityId });
+  Object.assign(req.body, {
+    userId: req.user.id,
+    submissionType: task.submissionType,
+    communityId: task.communityId,
+    rewardedAmount: task.reward,
+  });
   const submission = await submissionService.createSubmission(req.body);
   if (submission.isCompleted && submission.isReviewed) {
     await transactionService.createTransaction(
@@ -25,7 +30,7 @@ const createSubmission = catchAsync(async (req, res) => {
       submission.taskId,
       submission.communityId,
       submission.id,
-      (price = task.reward) => price
+      submission.rewardedAmount
     );
   }
   res.status(httpStatus.CREATED).send(submission);
