@@ -1,24 +1,24 @@
 const Joi = require('joi');
 const { password, objectId } = require('./custom.validation');
 
-exports.createUser = {
-  body: Joi.object().keys({
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    phone: Joi.object().keys({
-      countryCode: Joi.string().required(),
-      number: Joi.string().required(),
-    }),
-    password: Joi.string().required().custom(password),
-    description: Joi.string(),
-    walletAddress: Joi.string(),
-    //TODO link verification
-    twitter: Joi.string(),
-    discord: Joi.string(),
-    telegram: Joi.string(),
-    website: Joi.string(),
-  }),
-};
+// exports.createUser = {
+//   body: Joi.object().keys({
+//     name: Joi.string().required(),
+//     email: Joi.string().email().required(),
+//     phone: Joi.object().keys({
+//       countryCode: Joi.string().required(),
+//       number: Joi.string().required(),
+//     }),
+//     password: Joi.string().required().custom(password),
+//     description: Joi.string(),
+//     walletAddress: Joi.string(),
+//     //TODO link verification
+//     twitter: Joi.string(),
+//     discord: Joi.string(),
+//     telegram: Joi.string(),
+//     website: Joi.string(),
+//   }),
+// };
 
 exports.getUsers = {
   query: Joi.object().keys({
@@ -37,6 +37,9 @@ exports.getUser = {
 };
 
 exports.updateUser = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
   body: Joi.object()
     .keys({
       name: Joi.string(),
@@ -59,8 +62,8 @@ exports.updateUser = {
   file: Joi.any(),
 };
 
-// exports.deleteUser = {
-//   params: Joi.object().keys({
-//     userId: Joi.string().custom(objectId),
-//   }),
-// };
+exports.deleteUser = {
+  params: Joi.object().keys({
+    userId: Joi.string().custom(objectId),
+  }),
+};

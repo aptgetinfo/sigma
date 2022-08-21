@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { setLastUpdated } = require('./task.methods');
 const { isNameTaken } = require('./task.statics');
 const { toJSON, paginate } = require('../plugins');
-const { submissionType } = require('../../config/submissionType');
+const { submissionType } = require('../../config/constants');
 
 const taskSchema = mongoose.Schema({
   name: {

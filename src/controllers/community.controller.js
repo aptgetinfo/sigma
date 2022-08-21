@@ -5,7 +5,7 @@ const catchAsync = require('../utils/catchAsync');
 const { communityService } = require('../services');
 
 const createCommunity = catchAsync(async (req, res) => {
-  Object.assign(req.body, { admin: req.user.id, image: req.file.filename });
+  Object.assign(req.body, { admin: req.user.id });
   const community = await communityService.createCommunity(req.body);
   res.status(httpStatus.CREATED).send(community);
 });

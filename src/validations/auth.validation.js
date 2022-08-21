@@ -4,40 +4,40 @@ const { password } = require('./custom.validation');
 exports.register = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    phone: Joi.object().keys({
-      countryCode: Joi.string().required(),
-      number: Joi.string().required(),
-    }),
+    // phone: Joi.object().keys({
+    //   countryCode: Joi.string().required(),
+    //   number: Joi.string().required(),
+    // }),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
   }),
 };
 
-exports.registerVerification = {
-  body: Joi.object().keys({
-    email: Joi.string().required().email(),
-    password: Joi.string().required().custom(password),
-    phoneCode: Joi.string().required(),
-    emailCode: Joi.string().required(),
-  }),
-};
+// exports.registerVerification = {
+//   body: Joi.object().keys({
+//     email: Joi.string().required().email(),
+//     password: Joi.string().required().custom(password),
+//     phoneCode: Joi.string().required(),
+//     emailCode: Joi.string().required(),
+//   }),
+// };
 
 exports.login = {
   body: Joi.object().keys({
     email: Joi.string().required(),
     password: Joi.string().required(),
-    type: Joi.number().valid(0, 1).required(),
+    // type: Joi.number().valid(0, 1).required(),
   }),
 };
 
-exports.loginVerification = {
-  body: Joi.object().keys({
-    email: Joi.string().required(),
-    password: Joi.string().required(),
-    type: Joi.number().valid(0, 1).required(),
-    code: Joi.string().required(),
-  }),
-};
+// exports.loginVerification = {
+//   body: Joi.object().keys({
+//     email: Joi.string().required(),
+//     password: Joi.string().required(),
+//     type: Joi.number().valid(0, 1).required(),
+//     code: Joi.string().required(),
+//   }),
+// };
 
 exports.logout = {
   body: Joi.object().keys({

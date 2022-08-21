@@ -3,8 +3,8 @@ const { setLastUpdated } = require('./community.methods');
 const { isNameTaken } = require('./community.statics');
 
 const { toJSON, paginate } = require('../plugins');
-const { blockchain } = require('../../config/blockchain');
-const { category } = require('../../config/category');
+const { blockchain } = require('../../config/constants');
+const { category } = require('../../config/constants');
 
 const communitySchema = mongoose.Schema({
   name: {

@@ -30,10 +30,11 @@ const transactionSchema = mongoose.Schema({
   },
   price: {
     type: Number,
-    min: [0, 'Transaction Price must be more than 0'],
-    default: 10,
+    min: [0, 'Transaction Price must be >= 0'],
+    default: 0,
     required: [true, 'A transaction must consist a price'],
   },
+  // TODO Price adjustment all over schema
   paidOn: {
     type: Date,
   },
@@ -46,6 +47,7 @@ const transactionSchema = mongoose.Schema({
     default: new Date(),
   },
 });
+// TODO add Last updated call to every schema update
 
 transactionSchema.plugin(toJSON);
 transactionSchema.plugin(paginate);

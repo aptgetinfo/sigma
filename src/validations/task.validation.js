@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
-const { submissionType } = require('../config/submissionType');
+const { submissionType } = require('../config/constants');
 //TODO Task Category to be added
 exports.createTask = {
   body: Joi.object().keys({

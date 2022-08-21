@@ -4,36 +4,36 @@ const { authService, userService, tokenService, emailService, twilioService } = 
 
 const register = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
-  await twilioService.sendVerificationSms(user.phone);
-  await twilioService.sendVerificationEmail(user.email);
+  // await twilioService.sendVerificationSms(user.phone);
+  // await twilioService.sendVerificationEmail(user.email);
   res.status(httpStatus.CREATED).send({ user });
 });
 
-const registerVerification = catchAsync(async (req, res) => {
-  const { email, password, phoneCode, emailCode } = req.body;
-  const user = await authService.loginUserWithEmailAndPassword(email, password);
-  await authService.verifyEmail(user, emailCode);
-  await authService.verifyPhone(user, phoneCode);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
-});
+// const registerVerification = catchAsync(async (req, res) => {
+//   const { email, password, phoneCode, emailCode } = req.body;
+//   const user = await authService.loginUserWithEmailAndPassword(email, password);
+//   await authService.verifyEmail(user, emailCode);
+//   await authService.verifyPhone(user, phoneCode);
+//   const tokens = await tokenService.generateAuthTokens(user);
+//   res.send({ user, tokens });
+// });
 
 const login = catchAsync(async (req, res) => {
-  const { email, password, type } = req.body;
+  const { email, password } = req.body;
   const user = await authService.loginUserWithEmailAndPassword(email, password);
-  if (type) await twilioService.sendVerificationSms(user.phone);
-  else await twilioService.sendVerificationEmail(user.email);
+  // if (type) await twilioService.sendVerificationSms(user.phone);
+  // else await twilioService.sendVerificationEmail(user.email);
   res.send({ user });
 });
 
-const loginVerification = catchAsync(async (req, res) => {
-  const { email, password, type, code } = req.body;
-  const user = await authService.loginUserWithEmailAndPassword(email, password);
-  if (type) await authService.verifyPhone(user, code);
-  else await authService.verifyEmail(user, code);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
-});
+// const loginVerification = catchAsync(async (req, res) => {
+//   const { email, password, type, code } = req.body;
+//   const user = await authService.loginUserWithEmailAndPassword(email, password);
+//   if (type) await authService.verifyPhone(user, code);
+//   else await authService.verifyEmail(user, code);
+//   const tokens = await tokenService.generateAuthTokens(user);
+//   res.send({ user, tokens });
+// });
 
 const logout = catchAsync(async (req, res) => {
   await authService.logout(req.body.refreshToken);
@@ -79,8 +79,8 @@ const verifySms = catchAsync(async (req, res) => {
 module.exports = {
   register,
   login,
-  registerVerification,
-  loginVerification,
+  // registerVerification,
+  // loginVerification,
   logout,
   refreshTokens,
   forgotPassword,

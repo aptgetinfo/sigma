@@ -9,7 +9,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
+  // .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
   .get(validate(userValidation.getUsers), userController.getUsers);
 
 router
@@ -22,6 +22,6 @@ router
     multerService.resizeUserImage,
     userController.updateUser
   )
-  .delete(auth(), userController.deleteUser);
+  .delete(auth(), validate(userValidation.deleteUser), userController.deleteUser);
 
 module.exports = router;

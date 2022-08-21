@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
-const { blockchain } = require('../config/blockchain');
-const { category } = require('../config/category');
+const { blockchain } = require('../config/constants');
+const { category } = require('../config/constants');
 
 exports.createCommunity = {
   body: Joi.object().keys({
@@ -20,7 +20,6 @@ exports.createCommunity = {
     website: Joi.string().uri().trim(),
     opensea: Joi.string().uri().trim(),
   }),
-  file: Joi.any().required(),
 };
 
 exports.getCommunitys = {

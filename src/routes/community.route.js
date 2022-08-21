@@ -9,13 +9,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(
-    auth(),
-    validate(communityValidation.createCommunity),
-    multerService.uploadImage,
-    multerService.resizeCommunityImage,
-    communityController.createCommunity
-  )
+  .post(auth(), validate(communityValidation.createCommunity), communityController.createCommunity)
   .get(validate(communityValidation.getCommunitys), communityController.getCommunitys);
 
 router

@@ -1,15 +1,11 @@
 const httpStatus = require('http-status');
 const { Submission } = require('../models');
 const ApiError = require('../utils/ApiError');
-const submissionType = require('../config/submissionType');
 const communityService = require('./community.service');
 
 const createSubmission = async (submissionBody) => {
   if (await Submission.isTaskDone(submissionBody.taskId, submissionBody.userId)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Task already done');
-  }
-  if (submissionBody.submissionType === submissionType.None) {
-    Object.assign(submissionBody, { isReviewed: true, isCompleted: true });
   }
   Object.assign(submissionBody, { communityId: submissionBody.communityId });
   return Submission.create(submissionBody);
@@ -46,7 +42,7 @@ const deleteSubmissionById = async (userId, submissionId) => {
   }
   const community = await communityService.getCommunityById(submission.communityId);
   if (userId !== community.admin.toString()) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this submission');
+    throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to delete this submission');
   }
   await submission.remove();
   return submission;

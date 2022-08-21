@@ -20,28 +20,32 @@ const userSchema = mongoose.Schema({
     validate: [validator.isEmail, 'Please provide a valid email'],
   },
   phone: {
-    countryCode: {
-      type: String,
-      required: [true, 'Country Code Required'],
-      trim: true,
-      lowercase: true,
-      validate(value) {
-        if (!value.match(/^[0-9]+$/)) {
-          throw new Error('Please provide a valid phone number');
-        }
+    type: {
+      countryCode: {
+        type: String,
+        required: [true, 'Country Code Required'],
+        trim: true,
+        lowercase: true,
+        validate(value) {
+          if (!value.match(/^[0-9]+$/)) {
+            throw new Error('Please provide a valid phone number');
+          }
+        },
+      },
+      number: {
+        type: String,
+        required: [true, 'Phone Number Required'],
+        trim: true,
+        lowercase: true,
+        validate(value) {
+          if (!value.match(/^[0-9]+$/)) {
+            throw new Error('Please provide a valid phone number');
+          }
+        },
       },
     },
-    number: {
-      type: String,
-      required: [true, 'Phone Number Required'],
-      trim: true,
-      lowercase: true,
-      validate(value) {
-        if (!value.match(/^[0-9]+$/)) {
-          throw new Error('Please provide a valid phone number');
-        }
-      },
-    },
+    required: false,
+    private: true,
   },
   description: {
     type: String,

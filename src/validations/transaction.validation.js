@@ -20,8 +20,8 @@ exports.getTransaction = {
   }),
 };
 
-exports.deleteTransaction = {
-  params: Joi.object().keys({
-    transactionId: Joi.string().custom(objectId),
-  }),
-};
+// exports.deleteTransaction = {
+//   params: Joi.object().keys({
+//     transactionId: Joi.string().custom(objectId),
+//   }),
+// };
