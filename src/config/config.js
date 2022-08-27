@@ -70,4 +70,9 @@ module.exports = {
     },
     from: envVars.EMAIL_FROM,
   },
+  twitter: {
+    key: envVars.TWITTER_API_KEY,
+    secret: envVars.TWITTER_API_KEY_SECRET,
+    bearer: envVars.TWITTER_BEARER_TOKEN,
+  },
 };

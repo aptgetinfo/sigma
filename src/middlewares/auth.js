@@ -28,4 +28,17 @@ const auth =
       .then(() => next())
       .catch((err) => next(err));
 
-module.exports = auth;
+const authTwitter =
+  (...requiredRights) =>
+  async (req, res, next) =>
+    new Promise((resolve, reject) => {
+      passport.authenticate('twitter-token', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(
+        req,
+        res,
+        next
+      );
+    })
+      .then(() => next())
+      .catch((err) => next(err));
+
+module.exports = { auth, authTwitter };
