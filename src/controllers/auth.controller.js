@@ -41,8 +41,6 @@ const twitterVerify = catchAsync(async (req, res, next) => {
       if (err) {
         throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, err.message);
       }
-
-      console.log(body);
       const bodyString = `{ "${body.replace(/&/g, '", "').replace(/=/g, '": "')}"}`;
       const parsedBody = JSON.parse(bodyString);
 
@@ -59,32 +57,6 @@ const login = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send({ user: req.user, tokens });
 });
 
-// const registerVerification = catchAsync(async (req, res) => {
-//   const { email, password, phoneCode, emailCode } = req.body;
-//   const user = await authService.loginUserWithEmailAndPassword(email, password);
-//   await authService.verifyEmail(user, emailCode);
-//   await authService.verifyPhone(user, phoneCode);
-//   const tokens = await tokenService.generateAuthTokens(user);
-//   res.send({ user, tokens });
-// });
-
-// const login = catchAsync(async (req, res) => {
-//   const { email, password } = req.body;
-//   const user = await authService.loginUserWithEmailAndPassword(email, password);
-//   // if (type) await twilioService.sendVerificationSms(user.phone);
-//   // else await twilioService.sendVerificationEmail(user.email);
-//   res.send({ user });
-// });
-
-// const loginVerification = catchAsync(async (req, res) => {
-//   const { email, password, type, code } = req.body;
-//   const user = await authService.loginUserWithEmailAndPassword(email, password);
-//   if (type) await authService.verifyPhone(user, code);
-//   else await authService.verifyEmail(user, code);
-//   const tokens = await tokenService.generateAuthTokens(user);
-//   res.send({ user, tokens });
-// });
-
 const logout = catchAsync(async (req, res) => {
   await authService.logout(req.body.refreshToken);
   res.status(httpStatus.NO_CONTENT).send();
@@ -94,17 +66,6 @@ const refreshTokens = catchAsync(async (req, res) => {
   const tokens = await authService.refreshAuth(req.body.refreshToken);
   res.send({ ...tokens });
 });
-
-// const forgotPassword = catchAsync(async (req, res) => {
-//   const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-//   await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-//   res.status(httpStatus.NO_CONTENT).send();
-// });
-
-// const resetPassword = catchAsync(async (req, res) => {
-//   await authService.resetPassword(req.query.token, req.body.password);
-//   res.status(httpStatus.NO_CONTENT).send();
-// });
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
   await twilioService.sendVerificationEmail(req.user.email);
@@ -129,14 +90,9 @@ const verifySms = catchAsync(async (req, res) => {
 module.exports = {
   twitterReverse,
   twitterVerify,
-  // register,
   login,
-  // registerVerification,
-  // loginVerification,
   logout,
   refreshTokens,
-  // forgotPassword,
-  // resetPassword,
   sendVerificationEmail,
   sendVerificationSms,
   verifyEmail,

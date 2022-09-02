@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-// const bcrypt = require('bcryptjs');
-const { isPasswordMatch, setLastUpdated } = require('./user.methods');
+const { setLastUpdated } = require('./user.methods');
 const { isEmailTaken, isPhoneTaken } = require('./user.statics');
 const { toJSON, paginate } = require('../plugins');
 
@@ -23,7 +22,46 @@ const userSchema = mongoose.Schema({
       id: String,
       token: String,
     },
+    required: true,
     select: false,
+  },
+  description: {
+    type: String,
+  },
+  image: {
+    type: String,
+    trim: true,
+  },
+  walletAddress: {
+    type: String,
+    trim: true,
+  },
+  taskCompleted: [
+    {
+      taskId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Task',
+      },
+      communityId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Community',
+      },
+      completedAt: {
+        type: Date,
+      },
+      reward: {
+        type: Number,
+        default: 0,
+      },
+    },
+  ],
+  dateOfEntry: {
+    type: Date,
+    default: new Date(),
+  },
+  lastUpdated: {
+    type: Date,
+    default: new Date(),
   },
   // phone: {
   //   type: {
@@ -53,13 +91,6 @@ const userSchema = mongoose.Schema({
   //   required: false,
   //   private: true,
   // },
-  // description: {
-  //   type: String,
-  // },
-  // image: {
-  //   type: String,
-  //   trim: true,
-  // },
   // password: {
   //   type: String,
   //   required: [true, 'Password Required'],
@@ -72,10 +103,7 @@ const userSchema = mongoose.Schema({
   //   },
   //   private: true,
   // },
-  // walletAddress: {
-  //   type: String,
-  //   trim: true,
-  // },
+
   // twitter: {
   //   type: String,
   //   trim: true,
@@ -92,25 +120,6 @@ const userSchema = mongoose.Schema({
   //   type: String,
   //   trim: true,
   // },
-  // taskCompleted: [
-  //   {
-  //     taskId: {
-  //       type: mongoose.Schema.Types.ObjectId,
-  //       ref: 'Task',
-  //     },
-  //     communityId: {
-  //       type: mongoose.Schema.Types.ObjectId,
-  //       ref: 'Community',
-  //     },
-  //     completedAt: {
-  //       type: Date,
-  //     },
-  //     reward: {
-  //       type: Number,
-  //       default: 0,
-  //     },
-  //   },
-  // ],
   // isEmailVerified: {
   //   type: Boolean,
   //   default: false,
@@ -126,33 +135,11 @@ const userSchema = mongoose.Schema({
   //   default: true,
   //   private: true,
   // },
-  dateOfEntry: {
-    type: Date,
-    default: new Date(),
-  },
-  lastUpdated: {
-    type: Date,
-    default: new Date(),
-  },
 });
 
 userSchema.plugin(toJSON);
 userSchema.plugin(paginate);
-
-// userSchema.pre(/^find/, function (next) {
-//   this.find({ isActive: { $ne: false } });
-//   next();
-// });
-
-// userSchema.pre('save', async function (next) {
-//   const user = this;
-//   if (user.isModified('password')) {
-//     user.password = await bcrypt.hash(user.password, 8);
-//   }
-//   next();
-// });
 userSchema.methods.setLastUpdated = setLastUpdated;
-userSchema.methods.isPasswordMatch = isPasswordMatch;
 userSchema.statics.isEmailTaken = isEmailTaken;
 userSchema.statics.isPhoneTaken = isPhoneTaken;
 
