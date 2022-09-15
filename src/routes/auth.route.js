@@ -5,15 +5,14 @@ const { authController } = require('../controllers');
 const { auth, authTwitter } = require('../middlewares/auth');
 
 const router = express.Router();
-
-router.post('/twitter/reverse', authController.twitterReverse);
-router.post(
+router.get(
   '/twitter',
   validate(authValidation.twitterVerify),
   authController.twitterVerify,
   authTwitter(),
   authController.login
 );
+router.post('/twitter/reverse', authController.twitterReverse);
 router.post('/logout', validate(authValidation.logout), authController.logout);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 router.post('/send-verification-email', auth(), authController.sendVerificationEmail);

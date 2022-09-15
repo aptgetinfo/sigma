@@ -56,5 +56,13 @@ const allRoles = {
   admin: ['getUsers', 'manageUsers'],
 };
 
+const jobs = {
+  discord: ['join'],
+  twitter: ['follow', 'retweet'],
+  telegram: ['join'],
+};
 exports.roles = Object.keys(allRoles);
 exports.roleRights = new Map(Object.entries(allRoles));
+
+exports.job = Object.keys(jobs);
+exports.jobTypes = new Map(Object.entries(jobs));

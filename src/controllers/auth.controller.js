@@ -19,9 +19,8 @@ const twitterReverse = catchAsync(async (req, res) => {
       if (err) {
         throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, err.message);
       }
-
       const jsonStr = `{ "${body.replace(/&/g, '", "').replace(/=/g, '": "')}"}`;
-      res.status(httpStatus.OK).send(jsonStr);
+      res.status(httpStatus.OK).send(JSON.parse(jsonStr));
     }
   );
 });
@@ -47,9 +46,9 @@ const twitterVerify = catchAsync(async (req, res, next) => {
       req.body.oauth_token = parsedBody.oauth_token;
       req.body.oauth_token_secret = parsedBody.oauth_token_secret;
       req.body.user_id = parsedBody.user_id;
+      next();
     }
   );
-  next();
 });
 
 const login = catchAsync(async (req, res) => {
