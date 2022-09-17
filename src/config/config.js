@@ -21,6 +21,11 @@ const envVarsSchema = Joi.object()
     JWT_VERIFY_EMAIL_EXPIRATION_MINUTES: Joi.number()
       .default(10)
       .description('minutes after which verify email token expires'),
+    DISCORD_CLIENT_ID: Joi.string().required().description('Discord Client ID'),
+    DISCORD_CLIENT_SECRET: Joi.string().required().description('Discord Client Secret'),
+    DISCORD_REDIRECT_URI: Joi.string().required().description('Discord Redirect URI'),
+    DISCORD_ACCESS_TOKEN_URL: Joi.string().required().description('Discord Access Token URL'),
+    DISCORD_USER_PROFILE_URL: Joi.string().required().description('Discord User Profile URL'),
     // SMTP_HOST: Joi.string().description('server that will send the emails'),
     // SMTP_PORT: Joi.number().description('port to connect to the email server'),
     // SMTP_USERNAME: Joi.string().description('username for email server'),
@@ -74,5 +79,12 @@ module.exports = {
     key: envVars.TWITTER_API_KEY,
     secret: envVars.TWITTER_API_KEY_SECRET,
     bearer: envVars.TWITTER_BEARER_TOKEN,
+  },
+  discord: {
+    client_id: envVars.DISCORD_CLIENT_ID,
+    client_secret: envVars.DISCORD_CLIENT_SECRET,
+    redirect_uri: envVars.DISCORD_REDIRECT_URI,
+    access_token_url: envVars.DISCORD_ACCESS_TOKEN_URL,
+    user_profile_url: envVars.DISCORD_USER_PROFILE_URL,
   },
 };

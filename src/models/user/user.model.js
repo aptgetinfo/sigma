@@ -58,7 +58,24 @@ const userSchema = mongoose.Schema({
       type: String,
       required: true,
     },
-    private: true,
+  },
+  discordProvider: {
+    id: {
+      type: String,
+      unique: true,
+    },
+    username: {
+      type: String,
+    },
+    accessToken: {
+      type: String,
+    },
+    refreshToken: {
+      type: String,
+    },
+    expiresAt: {
+      type: Date,
+    },
   },
   description: {
     type: String,

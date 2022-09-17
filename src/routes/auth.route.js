@@ -12,6 +12,7 @@ router.get(
   authTwitter(),
   authController.login
 );
+router.get('/discord', validate(authValidation.discordLogin), authController.discordLogin);
 router.post('/twitter/reverse', authController.twitterReverse);
 router.post('/logout', validate(authValidation.logout), authController.logout);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);

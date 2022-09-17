@@ -1,5 +1,4 @@
 const TwitterTokenStrategy = require('passport-twitter-token');
-// const DiscordTokenStrategy = require('passport-discord-token');
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const httpStatus = require('http-status');
 const { User } = require('../models');
@@ -16,10 +15,7 @@ const twitterOptions = {
   consumerSecret: config.twitter.secret,
   includeEmail: true,
 };
-// const discordOptions = {
-//   clientID: config.discord.id,
-//   clientSecret: config.discord.secret,
-// };
+
 const jwtVerify = async (payload, done) => {
   try {
     if (payload.type !== tokenTypes.ACCESS) {
@@ -60,37 +56,11 @@ const twitterVerify = async (token, tokenSecret, profile, done) => {
     done(error, false);
   }
 };
-// const discordVerify = async (accessToken, refreshToken, profile, done) => {
-//   try {
-//     const user = await User.findOne({
-//       'discordProvider.id': profile.id,
-//     });
-//     if (!user) {
-//       if (await User.isEmailTaken(profile.emails[0].value)) {
-//         throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-//       }
-//       const newUser = await User.create({
-//         email: profile.emails[0].value,
-//         discordProvider: {
-//           id: profile.id,
-//           accessToken: accessToken,
-//           refreshToken: refreshToken,
-//         },
-//       });
-//       done(null, newUser);
-//     }
-//     done(null, user);
-//   } catch (error) {
-//     done(error, false);
-//   }
-// };
 
 const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
 const twitterStrategy = new TwitterTokenStrategy(twitterOptions, twitterVerify);
-// const discordStrategy = new DiscordTokenStrategy(discordOptions, discordVerify);
 
 module.exports = {
   twitterStrategy,
   jwtStrategy,
-  // discordStrategy,
 };

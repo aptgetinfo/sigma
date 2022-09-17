@@ -1,9 +1,11 @@
+/* eslint-disable no-nested-ternary */
 const request = require('request');
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { authService, tokenService, twilioService } = require('../services');
+const { authService, tokenService, twilioService, userService } = require('../services');
 const config = require('../config/config');
 const ApiError = require('../utils/ApiError');
+const { tokenTypes } = require('../config/constants');
 
 const twitterReverse = catchAsync(async (req, res) => {
   request.post(
@@ -51,6 +53,30 @@ const twitterVerify = catchAsync(async (req, res, next) => {
   );
 });
 
+const discordLogin = catchAsync(async (req, res) => {
+  const { code, state } = req.query;
+  const doc = await tokenService.verifyToken(state, tokenTypes.REFRESH);
+  const userData = await userService.getUserById(doc.user);
+  const data = !userData.discordProvider.expiresAt
+    ? await authService.loginWithDiscord(code)
+    : userData.discordProvider.expiresAt < Date.now()
+    ? await authService.discordRefreshAccessToken(userData.discordProvider.refreshToken)
+    : { access_token: userData.discordProvider.accessToken, refresh_token: userData.discordProvider.refreshToken };
+  const user = await authService.getUserDiscordProfile(data.access_token);
+  const updatedUser = await userService.updateUserById(doc.user, {
+    discordProvider: {
+      id: user.userId,
+      username: user.username,
+      avatar: user.avatar,
+      email: user.email,
+      accessToken: data.access_token,
+      refreshToken: data.refresh_token,
+      expiresAt: new Date(new Date().setDate(new Date().getDate() + 7)),
+    },
+    discord: `${user.username}#${user.discriminator}`,
+  });
+  res.status(httpStatus.OK).send(updatedUser);
+});
 const login = catchAsync(async (req, res) => {
   const tokens = await tokenService.generateAuthTokens(req.user);
   res.status(httpStatus.CREATED).send({ user: req.user, tokens });
@@ -89,6 +115,7 @@ const verifySms = catchAsync(async (req, res) => {
 module.exports = {
   twitterReverse,
   twitterVerify,
+  discordLogin,
   login,
   logout,
   refreshTokens,

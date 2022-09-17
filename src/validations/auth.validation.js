@@ -7,6 +7,13 @@ exports.twitterVerify = {
   }),
 };
 
+exports.discordLogin = {
+  query: Joi.object().keys({
+    code: Joi.string().required(),
+    state: Joi.string().required(),
+  }),
+};
+
 exports.logout = {
   body: Joi.object().keys({
     refreshToken: Joi.string().required(),

@@ -1,3 +1,4 @@
+const axios = require('axios');
 const httpStatus = require('http-status');
 const tokenService = require('./token.service');
 const userService = require('./user.service');
@@ -5,6 +6,64 @@ const twilioService = require('./twillo.service');
 const { Token } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/constants');
+const config = require('../config/config');
+
+const loginWithDiscord = async (code) => {
+  try {
+    const params = new URLSearchParams();
+    params.append('client_id', config.discord.client_id);
+    params.append('grant_type', 'authorization_code');
+    params.append('client_secret', config.discord.client_secret);
+    params.append('code', code);
+    params.append('redirect_uri', config.discord.redirect_uri);
+
+    const { data } = await axios.post(config.discord.access_token_url, params, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+    return data;
+  } catch (error) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Discord Login Error');
+  }
+};
+const discordRefreshAccessToken = async (refreshToken) => {
+  try {
+    const params = new URLSearchParams();
+    params.append('client_id', config.discord.client_id);
+    params.append('grant_type', 'refresh_token');
+    params.append('client_secret', config.discord.client_secret);
+    params.append('refresh_token', refreshToken);
+    params.append('redirect_uri', config.discord.redirect_uri);
+    const { data } = await axios.post(config.discord.access_token_url, params, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+    return data;
+  } catch (err) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Discord Login Error');
+  }
+};
+const getUserDiscordProfile = async (accessToken) => {
+  try {
+    const { data } = await axios.get(config.discord.user_profile_url, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return {
+      userId: data.id,
+      username: data.username,
+      avatar: data.avatar ? `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png` : null,
+      email: data.email,
+      isVerified: data.verified,
+      discriminator: data.discriminator,
+    };
+  } catch (err) {
+    throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Discord Profile Not Found');
+  }
+};
 
 const logout = async (refreshToken) => {
   const refreshTokenDoc = await Token.findOne({ token: refreshToken, type: tokenTypes.REFRESH, blacklisted: false });
@@ -57,4 +116,7 @@ module.exports = {
   refreshAuth,
   verifyEmail,
   verifyPhone,
+  loginWithDiscord,
+  discordRefreshAccessToken,
+  getUserDiscordProfile,
 };

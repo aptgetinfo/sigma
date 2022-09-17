@@ -41,17 +41,4 @@ const authTwitter =
       .then(() => next())
       .catch((err) => next(err));
 
-const authDiscord =
-  (...requiredRights) =>
-  async (req, res, next) =>
-    new Promise((resolve, reject) => {
-      passport.authenticate('discord-token', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(
-        req,
-        res,
-        next
-      );
-    })
-      .then(() => next())
-      .catch((err) => next(err));
-
-module.exports = { auth, authTwitter, authDiscord };
+module.exports = { auth, authTwitter };
