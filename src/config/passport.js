@@ -44,7 +44,9 @@ const twitterVerify = async (token, tokenSecret, profile, done) => {
         throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
       }
       const newUser = await User.create({
-        email: profile.emails[0].value,
+        name: profile.username,
+        image: profile.photos[0].value,
+        twitter: profile.username,
         twitterProvider: {
           id: profile.id,
           token: token,

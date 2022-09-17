@@ -24,11 +24,11 @@ exports.updateUser = {
   body: Joi.object()
     .keys({
       name: Joi.string(),
-      // email: Joi.string().email(),
-      // phone: Joi.object().keys({
-      //   countryCode: Joi.string(),
-      //   number: Joi.string(),
-      // }),
+      email: Joi.string().email(),
+      phone: Joi.object().keys({
+        countryCode: Joi.string(),
+        number: Joi.string(),
+      }),
       description: Joi.string(),
       // TODO wallet address verificationChecks
       walletAddress: Joi.string(),
@@ -36,7 +36,7 @@ exports.updateUser = {
       // twitter: Joi.string(),
       // discord: Joi.string(),
       // telegram: Joi.string(),
-      // website: Joi.string(),
+      website: Joi.string(),
     })
     .min(1),
   // file: Joi.any(),

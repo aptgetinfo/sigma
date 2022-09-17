@@ -16,10 +16,14 @@ const updateUserById = async (userId, updateBody) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
   }
-  // if (updateBody.phone && (await User.isPhoneTaken(updateBody.phone, userId))) {
-  //   throw new ApiError(httpStatus.BAD_REQUEST, 'Phone already taken');
-  // }
-  // if (updateBody.phone) Object.assign(updateBody, { isPhoneVerified: false });
+  if (updateBody.email && (await User.isEmailTaken(updateBody.email, userId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  }
+  if (updateBody.phone && (await User.isPhoneTaken(updateBody.phone, userId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Phone already taken');
+  }
+  if (updateBody.email) Object.assign(updateBody, { isEmailVerified: false });
+  if (updateBody.phone) Object.assign(updateBody, { isPhoneVerified: false });
   // if (file) Object.assign(updateBody, { image: file.filename });
   Object.assign(user, updateBody);
   await user.save();
