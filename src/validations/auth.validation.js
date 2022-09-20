@@ -14,6 +14,15 @@ exports.discordLogin = {
   }),
 };
 
+exports.discordBotLogin = {
+  query: Joi.object().keys({
+    code: Joi.string(),
+    state: Joi.string().required(),
+    guild_id: Joi.string().required(),
+    permissions: Joi.string().required(),
+  }),
+};
+
 exports.logout = {
   body: Joi.object().keys({
     refreshToken: Joi.string().required(),
