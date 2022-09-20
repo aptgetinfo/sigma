@@ -26,6 +26,9 @@ const envVarsSchema = Joi.object()
     DISCORD_REDIRECT_URI: Joi.string().required().description('Discord Redirect URI'),
     DISCORD_ACCESS_TOKEN_URL: Joi.string().required().description('Discord Access Token URL'),
     DISCORD_USER_PROFILE_URL: Joi.string().required().description('Discord User Profile URL'),
+    DISCORD_BOT_CLIENT_ID: Joi.string().required().description('Discord Bot Client Secret'),
+    DISCORD_BOT_CLIENT_SECRET: Joi.string().required().description('Discord Bot Client Secret'),
+    DISCORD_BOT_REDIRECT_URI: Joi.string().required().description('Discord Bot Redirect URI'),
     // SMTP_HOST: Joi.string().description('server that will send the emails'),
     // SMTP_PORT: Joi.number().description('port to connect to the email server'),
     // SMTP_USERNAME: Joi.string().description('username for email server'),
@@ -86,5 +89,8 @@ module.exports = {
     redirect_uri: envVars.DISCORD_REDIRECT_URI,
     access_token_url: envVars.DISCORD_ACCESS_TOKEN_URL,
     user_profile_url: envVars.DISCORD_USER_PROFILE_URL,
+    bot_client_id: envVars.DISCORD_CLIENT_ID,
+    bot_client_secret: envVars.DISCORD_CLIENT_SECRET,
+    bot_redirect_uri: envVars.DISCORD_BOT_REDIRECT_URI,
   },
 };
