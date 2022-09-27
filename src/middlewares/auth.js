@@ -8,11 +8,26 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
     return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
   }
   req.user = user;
-
   if (requiredRights.length) {
     const userRights = roleRights.get(user.role);
     const hasRequiredRights = requiredRights.every((requiredRight) => userRights.includes(requiredRight));
     if (!hasRequiredRights && req.params.userId !== user.id) {
+      return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
+    }
+  }
+  resolve();
+};
+
+const verifyCallback2 = (req, resolve, reject, requiredRights) => async (err, community, info) => {
+  if (err || info || !community) {
+    return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
+  }
+  req.community = community;
+
+  if (requiredRights.length) {
+    const communityRights = roleRights.get(community.role);
+    const hasRequiredRights = requiredRights.every((requiredRight) => communityRights.includes(requiredRight));
+    if (!hasRequiredRights && req.params.communityId !== community.id) {
       return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
     }
   }
@@ -32,7 +47,7 @@ const authTwitter =
   (...requiredRights) =>
   async (req, res, next) =>
     new Promise((resolve, reject) => {
-      passport.authenticate('twitter-token', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(
+      passport.authenticate('tweet-user', { session: false }, verifyCallback(req, resolve, reject, requiredRights))(
         req,
         res,
         next
@@ -41,4 +56,17 @@ const authTwitter =
       .then(() => next())
       .catch((err) => next(err));
 
-module.exports = { auth, authTwitter };
+const authTwitter2 =
+  (...requiredRights) =>
+  async (req, res, next) =>
+    new Promise((resolve, reject) => {
+      passport.authenticate('tweet-community', { session: false }, verifyCallback2(req, resolve, reject, requiredRights))(
+        req,
+        res,
+        next
+      );
+    })
+      .then(() => next())
+      .catch((err) => next(err));
+
+module.exports = { auth, authTwitter, authTwitter2 };

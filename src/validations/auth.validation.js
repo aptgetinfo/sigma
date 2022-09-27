@@ -16,7 +16,7 @@ exports.discordLogin = {
 
 exports.discordBotLogin = {
   query: Joi.object().keys({
-    code: Joi.string(),
+    code: Joi.string().required(),
     state: Joi.string().required(),
     guild_id: Joi.string().required(),
     permissions: Joi.string().required(),

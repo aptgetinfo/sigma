@@ -17,13 +17,10 @@ const queryCommunitys = async (filter, options) => {
 const getCommunityById = async (id) => Community.findById(id);
 const getCommunityByName = async (name) => Community.findOne({ name });
 
-const updateCommunityById = async (userId, communityId, updateBody, file) => {
+const updateCommunityById = async (communityId, updateBody, file) => {
   const community = await getCommunityById(communityId);
   if (!community) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
-  }
-  if (userId !== community.admin.toString()) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this community');
   }
   if (updateBody.name && (await Community.isNameTaken(updateBody.name, communityId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Name already taken');

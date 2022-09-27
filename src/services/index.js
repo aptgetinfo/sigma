@@ -8,3 +8,4 @@ exports.taskService = require('./task.service');
 exports.submissionService = require('./submission.service');
 exports.transactionService = require('./transaction.service');
 exports.multerService = require('./multer.service');
+exports.discordService = require('./discord.service');

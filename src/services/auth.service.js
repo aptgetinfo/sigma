@@ -8,14 +8,14 @@ const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/constants');
 const config = require('../config/config');
 
-const loginWithDiscord = async (code) => {
+const loginWithDiscord = async (code, bot = false) => {
   try {
     const params = new URLSearchParams();
-    params.append('client_id', config.discord.client_id);
+    params.append('client_id', bot ? config.discord.bot_client_id : config.discord.client_id);
     params.append('grant_type', 'authorization_code');
-    params.append('client_secret', config.discord.client_secret);
+    params.append('client_secret', bot ? config.discord.bot_client_secret : config.discord.client_secret);
     params.append('code', code);
-    params.append('redirect_uri', config.discord.redirect_uri);
+    params.append('redirect_uri', bot ? config.discord.bot_redirect_uri : config.discord.redirect_uri);
 
     const { data } = await axios.post(config.discord.access_token_url, params, {
       headers: {
@@ -27,14 +27,14 @@ const loginWithDiscord = async (code) => {
     throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Discord Login Error');
   }
 };
-const discordRefreshAccessToken = async (refreshToken) => {
+const discordRefreshAccessToken = async (refreshToken, bot = false) => {
   try {
     const params = new URLSearchParams();
-    params.append('client_id', config.discord.client_id);
+    params.append('client_id', bot ? config.discord.bot_client_id : config.discord.client_id);
     params.append('grant_type', 'refresh_token');
-    params.append('client_secret', config.discord.client_secret);
+    params.append('client_secret', bot ? config.discord.bot_client_secret : config.discord.client_secret);
     params.append('refresh_token', refreshToken);
-    params.append('redirect_uri', config.discord.redirect_uri);
+    params.append('redirect_uri', bot ? config.discord.bot_redirect_uri : config.discord.redirect_uri);
     const { data } = await axios.post(config.discord.access_token_url, params, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

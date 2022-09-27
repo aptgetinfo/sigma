@@ -7,9 +7,9 @@ const { Token } = require('../models');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/constants');
 
-const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
+const generateToken = (id, expires, type, secret = config.jwt.secret) => {
   const payload = {
-    sub: userId,
+    sub: id,
     iat: moment().unix(),
     exp: expires.unix(),
     type,
@@ -17,10 +17,10 @@ const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
   return jwt.sign(payload, secret);
 };
 
-const saveToken = async (token, userId, expires, type, blacklisted = false) => {
+const saveToken = async (token, id, expires, type, blacklisted = false) => {
   const tokenDoc = await Token.create({
     token,
-    user: userId,
+    user: id,
     expires: expires.toDate(),
     type,
     blacklisted,

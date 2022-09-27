@@ -17,6 +17,11 @@ exports.blockchain = {
   Teal: 'teal',
 };
 
+exports.verificationTypes = {
+  Manual: 0,
+  Bot: 1,
+};
+
 exports.category = {
   Nft: 'nft',
   Dao: 'dao',

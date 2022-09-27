@@ -8,7 +8,7 @@ const passport = require('passport');
 const httpStatus = require('http-status');
 const config = require('./config/config');
 const morgan = require('./config/morgan');
-const { jwtStrategy, twitterStrategy } = require('./config/passport');
+const { jwtStrategy, twitterStrategyForUser, twitterStrategyForCommunity } = require('./config/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes');
 const { errorConverter, errorHandler } = require('./middlewares/error');
@@ -43,7 +43,8 @@ app.options('*', cors());
 
 // jwt authentication
 app.use(passport.initialize());
-passport.use(twitterStrategy);
+passport.use('tweet-user', twitterStrategyForUser);
+passport.use('tweet-community', twitterStrategyForCommunity);
 passport.use('jwt', jwtStrategy);
 
 // limit repeated failed requests to auth endpoints
