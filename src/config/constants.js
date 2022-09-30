@@ -19,9 +19,23 @@ exports.blockchain = {
 
 exports.verificationTypes = {
   Manual: 0,
-  Bot: 1,
+  Twitter_Follow: 1,
+  Twitter_Retweet: 2,
+  Twitter_Like: 3,
+  Twitter_Quote_Retweet: 4,
+  Discord_Join: 5,
+  Discord_Role: 6,
+  Discord_Invite: 7,
+  Telegram_Join: 8,
 };
 
+exports.submissionTypes = {
+  None: 0,
+  Twitter_Link: 1,
+  Discord_Link: 2,
+  Telegram_Link: 3,
+  Drive_Link: 4,
+};
 exports.category = {
   Nft: 'nft',
   Dao: 'dao',
