@@ -5,54 +5,32 @@ const ApiError = require('../utils/ApiError');
 
 const createTask = async (taskBody) => {
   const community = await communityService.getCommunityById(taskBody.communityId);
-  if (!community) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Community not found');
-  }
-  if (taskBody.userId !== community.admin.toString()) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to create a task');
-  }
+  if (!community) throw new ApiError(httpStatus.BAD_REQUEST, 'Community not found');
+  if (await Task.isNameTaken(taskBody.name, taskBody.communityId))
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Task Name already exists');
   return Task.create(taskBody);
 };
 
-const queryTasks = async (filter, options) => {
-  const tasks = await Task.paginate(filter, options);
-  return tasks;
-};
-
+const queryTasks = async (filter, options) => await Task.paginate(filter, options);
 const getTaskById = async (id) => Task.findById(id);
 
-const updateTaskById = async (userId, taskId, updateBody) => {
+const updateTaskById = async (communityId, taskId, updateBody) => {
   const task = await getTaskById(taskId);
-  if (!task) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
-  }
-  if (await Task.isEmailTaken(updateBody.name, task.communityId)) {
+  if (!task) throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
+  if (task.communityId !== communityId) throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
+  if (task.isLive && !updateBody.isLive) throw new ApiError(httpStatus.FORBIDDEN, 'Task is live');
+  if (updateBody.name && (await Task.isNameTaken(updateBody.name, communityId, taskId)))
     throw new ApiError(httpStatus.BAD_REQUEST, 'Task Name already exists');
-  }
-  const community = await communityService.getCommunityById(task.communityId);
-  if (!community) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
-  }
-  if (userId !== community.admin.toString()) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this community');
-  }
   Object.assign(task, updateBody);
   await task.save();
   return task;
 };
 
-const deleteTaskById = async (userId, taskId) => {
+const deleteTaskById = async (communityId, taskId) => {
   const task = await getTaskById(taskId);
-  if (!task) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
-  }
-  const community = await communityService.getCommunityById(task.communityId);
-  if (!community) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
-  }
-  if (userId !== community.admin.toString()) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this community');
-  }
+  if (!task) throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
+  if (task.communityId !== communityId) throw new ApiError(httpStatus.FORBIDDEN, 'Forbidden');
+  if (task.isLive) throw new ApiError(httpStatus.FORBIDDEN, 'Task is live');
   await task.remove();
   return task;
 };
@@ -61,6 +39,7 @@ const isOnRequiredLevel = async (tasks, communityId, conditionLevel) => {
   const task = Task.find({ _id: { $in: tasks }, taskLevel: { $gte: conditionLevel }, isLive: true, communityId });
   return !!task;
 };
+
 module.exports = {
   createTask,
   queryTasks,

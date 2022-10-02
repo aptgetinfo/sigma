@@ -35,6 +35,8 @@ exports.submissionTypes = {
   Discord_Link: 2,
   Telegram_Link: 3,
   Drive_Link: 4,
+  Text: 5,
+  Image: 6,
 };
 exports.category = {
   Nft: 'nft',
@@ -51,15 +53,6 @@ exports.category = {
   Startup: 'startup',
   Protocol: 'protocol',
   Investing: 'investing',
-};
-
-exports.submissionType = {
-  None: 'none',
-  Url: 'url',
-  Image: 'image',
-  Text: 'text',
-  Twitter: 'twitter',
-  Discord: 'discord',
 };
 
 exports.tokenTypes = {

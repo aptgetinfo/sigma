@@ -1,21 +1,31 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
-const { submissionType } = require('../config/constants');
-//TODO Task Category to be added
+const { submissionTypes, verificationTypes } = require('../config/constants');
+
 exports.createTask = {
   body: Joi.object().keys({
-    communityId: Joi.string().custom(objectId).required(),
     name: Joi.string().required(),
-    mission: Joi.string(),
-    guidelines: Joi.string(),
-    submissionDetails: Joi.string(),
-    submissionType: Joi.string()
-      .valid(...Object.values(submissionType))
+    mission: Joi.string().required(),
+    guidelines: Joi.array()
+      .items(
+        Joi.object().keys({
+          at: Joi.number().required(),
+          guide: Joi.string().required(),
+        })
+      )
       .required(),
+    submissionType: Joi.array()
+      .items(
+        Joi.object().keys({
+          at: Joi.number().required(),
+          submission: Joi.string().valid(submissionTypes).required(),
+        })
+      )
+      .required(),
+    verificationType: Joi.array().items(Joi.string().valid(verificationTypes).required()).required(),
     reward: Joi.number().required(),
     taskLevel: Joi.number().required(),
-    conditionLevel: Joi.number().default(0),
-    isLive: Joi.boolean().default(false),
+    conditionLevel: Joi.number(),
   }),
 };
 
@@ -23,10 +33,10 @@ exports.getTasks = {
   query: Joi.object().keys({
     name: Joi.string(),
     communityId: Joi.string().custom(objectId),
-    submissionType: Joi.string().valid(...Object.values(submissionType)),
     reward: Joi.number(),
     taskLevel: Joi.number(),
     conditionLevel: Joi.number(),
+    isLive: Joi.boolean(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
@@ -47,9 +57,19 @@ exports.updateTask = {
     .keys({
       name: Joi.string(),
       mission: Joi.string(),
-      guidelines: Joi.string(),
-      submissionDetails: Joi.string(),
-      submissionType: Joi.string().valid(...Object.values(submissionType)),
+      guidelines: Joi.array().items(
+        Joi.object().keys({
+          at: Joi.number().required(),
+          guide: Joi.string().required(),
+        })
+      ),
+      submissionType: Joi.array().items(
+        Joi.object().keys({
+          at: Joi.number().required(),
+          submission: Joi.string().valid(submissionTypes).required(),
+        })
+      ),
+      verificationType: Joi.array().items(Joi.string().valid(verificationTypes).required()),
       reward: Joi.number(),
       taskLevel: Joi.number(),
       conditionLevel: Joi.number(),

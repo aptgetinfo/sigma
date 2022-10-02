@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { setLastUpdated } = require('./task.methods');
 const { isNameTaken } = require('./task.statics');
 const { toJSON, paginate } = require('../plugins');
-const { submissionType } = require('../../config/constants');
+const { submissionTypes, verificationTypes } = require('../../config/constants');
 
 const taskSchema = mongoose.Schema({
   name: {
@@ -12,18 +12,44 @@ const taskSchema = mongoose.Schema({
   },
   mission: {
     type: String,
+    required: [true, 'Mission Required'],
   },
-  guidelines: {
-    type: String,
-  },
-  submissionDetails: {
-    type: String,
-  },
-  submissionType: {
-    type: String,
-    required: [true, 'A task must have a submission type'],
-    enum: submissionType,
-  },
+  guidelines: [
+    {
+      type: {
+        at: {
+          type: Number,
+          required: [true, 'Guide Id Required'],
+        },
+        guide: {
+          type: String,
+          required: [true, 'Guide Required'],
+        },
+      },
+    },
+  ],
+  submissionType: [
+    {
+      type: {
+        at: {
+          type: Number,
+          required: [true, 'Submission Id Required'],
+        },
+        submission: {
+          type: String,
+          required: [true, 'Submission Required'],
+          enum: submissionTypes,
+        },
+      },
+    },
+  ],
+  verificationType: [
+    {
+      type: String,
+      required: [true, 'A task must have a verification type'],
+      enum: verificationTypes,
+    },
+  ],
   reward: {
     type: Number,
     default: 10,
@@ -33,12 +59,11 @@ const taskSchema = mongoose.Schema({
   taskLevel: {
     type: Number,
     required: [true, 'A task must have a task level'],
-    default: 1,
+    default: 0,
     max: 10,
   },
   conditionLevel: {
     type: Number,
-    default: 0,
     max: 10,
   },
   isLive: {
