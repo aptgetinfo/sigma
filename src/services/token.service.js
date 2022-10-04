@@ -20,7 +20,7 @@ const generateToken = (id, expires, type, secret = config.jwt.secret) => {
 const saveToken = async (token, id, expires, type, blacklisted = false) => {
   const tokenDoc = await Token.create({
     token,
-    user: id,
+    doc: id,
     expires: expires.toDate(),
     type,
     blacklisted,
@@ -30,20 +30,18 @@ const saveToken = async (token, id, expires, type, blacklisted = false) => {
 
 const verifyToken = async (token, type) => {
   const payload = jwt.verify(token, config.jwt.secret);
-  const tokenDoc = await Token.findOne({ token, type, user: payload.sub, blacklisted: false });
-  if (!tokenDoc) {
-    throw new Error('Token not found');
-  }
+  const tokenDoc = await Token.findOne({ token, type, doc: payload.sub, blacklisted: false });
+  if (!tokenDoc) throw new Error('Token not found');
   return tokenDoc;
 };
 
-const generateAuthTokens = async (user) => {
+const generateAuthTokens = async (doc) => {
   const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, 'minutes');
-  const accessToken = generateToken(user.id, accessTokenExpires, tokenTypes.ACCESS);
+  const accessToken = generateToken(doc.id, accessTokenExpires, tokenTypes.ACCESS);
 
   const refreshTokenExpires = moment().add(config.jwt.refreshExpirationDays, 'days');
-  const refreshToken = generateToken(user.id, refreshTokenExpires, tokenTypes.REFRESH);
-  await saveToken(refreshToken, user.id, refreshTokenExpires, tokenTypes.REFRESH);
+  const refreshToken = generateToken(doc.id, refreshTokenExpires, tokenTypes.REFRESH);
+  await saveToken(refreshToken, doc.id, refreshTokenExpires, tokenTypes.REFRESH);
 
   return {
     access: {
@@ -59,9 +57,7 @@ const generateAuthTokens = async (user) => {
 
 const generateResetPasswordToken = async (email) => {
   const user = await userService.getUserByEmail(email);
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'No users found with this email');
-  }
+  if (!user) throw new ApiError(httpStatus.NOT_FOUND, 'No users found with this email');
   const expires = moment().add(config.jwt.resetPasswordExpirationMinutes, 'minutes');
   const resetPasswordToken = generateToken(user.id, expires, tokenTypes.RESET_PASSWORD);
   await saveToken(resetPasswordToken, user.id, expires, tokenTypes.RESET_PASSWORD);

@@ -1,10 +1,8 @@
 const TwitterTokenStrategy = require('passport-twitter-token');
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
-const httpStatus = require('http-status');
 const { User, Community } = require('../models');
 const config = require('./config');
 const { tokenTypes } = require('./constants');
-const ApiError = require('../utils/ApiError');
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
@@ -28,9 +26,13 @@ const jwtVerify = async (payload, done) => {
     }
     const user = await User.findById(payload.sub);
     if (!user) {
-      return done(null, false);
+      const community = await Community.findById(payload.sub);
+      if (!community) {
+        return done(null, false);
+      }
+      return done(null, community);
     }
-    done(null, user);
+    return done(null, user);
   } catch (error) {
     done(error, false);
   }
@@ -41,9 +43,6 @@ const twitterVerifyForUser = async (token, tokenSecret, profile, done) => {
       'twitterProvider.id': profile.id,
     });
     if (!user) {
-      if (await User.isEmailTaken(profile.emails[0].value)) {
-        throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-      }
       const newUser = await User.create({
         name: profile.username,
         image: profile.photos[0].value,
@@ -68,9 +67,6 @@ const twitterVerifyForCommunity = async (token, tokenSecret, profile, done) => {
       'twitterProvider.id': profile.id,
     });
     if (!community) {
-    //   if (await Community.isEmailTaken(profile.emails[0].value)) {
-    //     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
-    //   }
       const newCommunity = await Community.create({
         name: profile.username,
         image: profile.photos[0].value,
@@ -92,6 +88,7 @@ const twitterVerifyForCommunity = async (token, tokenSecret, profile, done) => {
 const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
 const twitterStrategyForUser = new TwitterTokenStrategy(twitterOptions, twitterVerifyForUser);
 const twitterStrategyForCommunity = new TwitterTokenStrategy(twitterOptionsCommunity, twitterVerifyForCommunity);
+
 module.exports = {
   twitterStrategyForUser,
   twitterStrategyForCommunity,

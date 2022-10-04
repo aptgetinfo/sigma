@@ -157,7 +157,7 @@ const login = catchAsync(async (req, res) => {
 
 const loginCommunity = catchAsync(async (req, res) => {
   const tokens = await tokenService.generateAuthTokens(req.community);
-  res.status(httpStatus.CREATED).send({ user: req.community, tokens });
+  res.status(httpStatus.CREATED).send({ community: req.community, tokens });
 });
 
 const logout = catchAsync(async (req, res) => {

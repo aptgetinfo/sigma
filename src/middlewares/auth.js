@@ -4,9 +4,7 @@ const ApiError = require('../utils/ApiError');
 const { roleRights } = require('../config/constants');
 
 const verifyCallback = (req, resolve, reject, requiredRights) => async (err, user, info) => {
-  if (err || info || !user) {
-    return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
-  }
+  if (err || info || !user) return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
   req.user = user;
   if (requiredRights.length) {
     const userRights = roleRights.get(user.role);
@@ -19,17 +17,13 @@ const verifyCallback = (req, resolve, reject, requiredRights) => async (err, use
 };
 
 const verifyCallback2 = (req, resolve, reject, requiredRights) => async (err, community, info) => {
-  if (err || info || !community) {
-    return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
-  }
+  if (err || info || !community) return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
   req.community = community;
-
   if (requiredRights.length) {
     const communityRights = roleRights.get(community.role);
     const hasRequiredRights = requiredRights.every((requiredRight) => communityRights.includes(requiredRight));
-    if (!hasRequiredRights && req.params.communityId !== community.id) {
+    if (!hasRequiredRights && req.params.communityId !== community.id)
       return reject(new ApiError(httpStatus.FORBIDDEN, 'Forbidden'));
-    }
   }
   resolve();
 };

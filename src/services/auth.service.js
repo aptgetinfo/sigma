@@ -2,6 +2,7 @@ const axios = require('axios');
 const httpStatus = require('http-status');
 const tokenService = require('./token.service');
 const userService = require('./user.service');
+const communityService = require('./community.service');
 const twilioService = require('./twillo.service');
 const { Token } = require('../models');
 const ApiError = require('../utils/ApiError');
@@ -76,12 +77,11 @@ const logout = async (refreshToken) => {
 const refreshAuth = async (refreshToken) => {
   try {
     const refreshTokenDoc = await tokenService.verifyToken(refreshToken, tokenTypes.REFRESH);
-    const user = await userService.getUserById(refreshTokenDoc.user);
-    if (!user) {
-      throw new Error();
-    }
+    let doc = await userService.getUserById(refreshTokenDoc.doc);
+    doc ??= await communityService.getCommunityById(refreshTokenDoc.doc);
+    if (!doc) throw new Error();
     await refreshTokenDoc.remove();
-    return tokenService.generateAuthTokens(user);
+    return tokenService.generateAuthTokens(doc);
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
   }
@@ -90,9 +90,7 @@ const refreshAuth = async (refreshToken) => {
 const verifyEmail = async (user, code) => {
   try {
     const verified = await twilioService.verifyEmail(user.email, code);
-    if (!verified) {
-      throw new Error();
-    }
+    if (!verified) throw new Error();
     await userService.updateUserById(user.id, { isEmailVerified: true });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');
@@ -102,9 +100,7 @@ const verifyEmail = async (user, code) => {
 const verifyPhone = async (user, code) => {
   try {
     const verified = await twilioService.verifyPhone(user.phone, code);
-    if (!verified) {
-      throw new Error();
-    }
+    if (!verified) throw new Error();
     await userService.updateUserById(user.id, { isPhoneVerified: true });
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Phone verification failed');
