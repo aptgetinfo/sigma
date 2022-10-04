@@ -2,26 +2,14 @@ const httpStatus = require('http-status');
 const { Community } = require('../models');
 const ApiError = require('../utils/ApiError');
 
-const createCommunity = async (communityBody) => {
-  if (await Community.isNameTaken(communityBody.name)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Name already taken');
-  }
-  return Community.create(communityBody);
-};
-
-const queryCommunitys = async (filter, options) => {
-  const communitys = await Community.paginate(filter, options);
-  return communitys;
-};
-
+const queryCommunitys = async (filter, options) => await Community.paginate(filter, options);
 const getCommunityById = async (id) => Community.findById(id);
-const getCommunityByName = async (name) => Community.findOne({ name });
 
 const updateCommunityById = async (communityId, updateBody, file) => {
   const community = await getCommunityById(communityId);
-  if (!community) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
-  }
+  if (!community) throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
+  // TODO: check if below if/else is working as intended, in task also.
+  if (community.isPublic && !updateBody.isPublic) throw new ApiError(httpStatus.FORBIDDEN, 'Community is Public');
   if (updateBody.name && (await Community.isNameTaken(updateBody.name, communityId))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Name already taken');
   }
@@ -31,23 +19,17 @@ const updateCommunityById = async (communityId, updateBody, file) => {
   return community;
 };
 
-const deleteCommunityById = async (userId, communityId) => {
+const deleteCommunityById = async (communityId) => {
   const community = await getCommunityById(communityId);
-  if (!community) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
-  }
-  if (userId !== community.admin.toString()) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to delete this community');
-  }
+  if (!community) throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
+  if (community.isPublic) throw new ApiError(httpStatus.FORBIDDEN, 'Community is Public');
   await community.remove();
   return community;
 };
 
 module.exports = {
-  createCommunity,
   queryCommunitys,
   getCommunityById,
-  getCommunityByName,
   updateCommunityById,
   deleteCommunityById,
 };

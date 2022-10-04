@@ -9,7 +9,7 @@ const router = express.Router();
 
 router
   .route('/')
-  .post(auth(), validate(communityValidation.createCommunity), communityController.createCommunity)
+  // .post(auth(), validate(communityValidation.createCommunity), communityController.createCommunity)
   .get(validate(communityValidation.getCommunitys), communityController.getCommunitys);
 
 router

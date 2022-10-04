@@ -82,9 +82,11 @@ const communitySchema = mongoose.Schema({
   },
   website: {
     type: String,
+    trim: true,
   },
   linkedin: {
     type: String,
+    trim: true,
   },
   dateOfEntry: {
     type: Date,
