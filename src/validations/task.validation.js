@@ -19,6 +19,8 @@ exports.createTask = {
         Joi.object().keys({
           at: Joi.number().required(),
           submission: Joi.string().valid(submissionTypes).required(),
+          info: Joi.string(),
+          // TODO: check if info is required
         })
       )
       .required(),
@@ -67,6 +69,7 @@ exports.updateTask = {
         Joi.object().keys({
           at: Joi.number().required(),
           submission: Joi.string().valid(submissionTypes).required(),
+          info: Joi.string(),
         })
       ),
       verificationType: Joi.array().items(Joi.string().valid(verificationTypes).required()),

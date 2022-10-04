@@ -40,6 +40,9 @@ const taskSchema = mongoose.Schema({
           required: [true, 'Submission Required'],
           enum: submissionTypes,
         },
+        info: {
+          type: String,
+        },
       },
     },
   ],

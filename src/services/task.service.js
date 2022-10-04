@@ -34,9 +34,9 @@ const deleteTaskById = async (communityId, taskId) => {
   await task.remove();
   return task;
 };
-
+// TODO: check this for improvement
 const isOnRequiredLevel = async (tasks, communityId, conditionLevel) => {
-  const task = Task.find({ _id: { $in: tasks }, taskLevel: { $gte: conditionLevel }, isLive: true, communityId });
+  const task = Task.find({ _id: { $in: tasks }, taskLevel: { $gte: conditionLevel }, communityId });
   return !!task;
 };
 
