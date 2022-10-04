@@ -24,18 +24,13 @@ const transactionSchema = mongoose.Schema({
     ref: 'Submission',
     required: true,
   },
-  isPaid: {
-    type: Boolean,
-    default: false,
-  },
-  price: {
+  reward: {
     type: Number,
     min: [0, 'Transaction Price must be >= 0'],
     default: 0,
     required: [true, 'A transaction must consist a price'],
   },
-  // TODO Price adjustment all over schema
-  paidOn: {
+  grantedOn: {
     type: Date,
   },
   dateOfEntry: {
