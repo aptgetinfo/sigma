@@ -97,6 +97,10 @@ const userSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Community',
       },
+      submissionId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Submission',
+      },
       completedAt: {
         type: Date,
       },

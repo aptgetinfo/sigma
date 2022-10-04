@@ -3,6 +3,7 @@ const { setLastUpdated } = require('./submission.methods');
 const { isTaskDone } = require('./submission.statics');
 const { toJSON, paginate } = require('../plugins');
 const User = require('../user/user.model');
+const { submissionTypes } = require('../../config/constants');
 
 const submissionSchema = mongoose.Schema({
   taskId: {
@@ -32,10 +33,24 @@ const submissionSchema = mongoose.Schema({
     type: Number,
     default: 0,
   },
-  entry: {
-    type: String,
-    required: true,
-  },
+  entry: [
+    {
+      type: {
+        at: {
+          type: Number,
+          required: [true, 'Submission Id Required'],
+        },
+        submission: {
+          type: String,
+          required: [true, 'Submission Required'],
+          enum: submissionTypes,
+        },
+        info: {
+          type: String,
+        },
+      },
+    },
+  ],
   dateOfEntry: {
     type: Date,
     default: new Date(),

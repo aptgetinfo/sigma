@@ -1,10 +1,19 @@
 const Joi = require('joi');
 const { objectId } = require('./custom.validation');
+const { submissionTypes } = require('../config/constants');
 
 exports.createSubmission = {
   body: Joi.object().keys({
     taskId: Joi.string().custom(objectId),
-    entry: Joi.string().required(),
+    entry: Joi.array()
+      .items(
+        Joi.object().keys({
+          at: Joi.number().required(),
+          submission: Joi.string().valid(submissionTypes).required(),
+          info: Joi.string().required(),
+        })
+      )
+      .required(),
   }),
 };
 

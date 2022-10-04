@@ -30,9 +30,6 @@ const transactionSchema = mongoose.Schema({
     default: 0,
     required: [true, 'A transaction must consist a price'],
   },
-  grantedOn: {
-    type: Date,
-  },
   dateOfEntry: {
     type: Date,
     default: new Date(),

@@ -3,25 +3,21 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { submissionService, transactionService, taskService } = require('../services');
-const { submissionType } = require('../config/constants');
+const { submissionType, verificationTypes } = require('../config/constants');
 
 const createSubmission = catchAsync(async (req, res) => {
-  if (!req.user.isEmailVerified || !req.user.isPhoneVerified) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'You need to verify your email or phone number to submit a task');
-  }
   const task = await taskService.getTaskById(req.body.taskId);
-  if (!task) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
-  }
+  if (!task) throw new ApiError(httpStatus.NOT_FOUND, 'Task not found');
+  if (!task.isLive) throw new ApiError(httpStatus.FORBIDDEN, 'Task not found');
   const isAllowed = await taskService.isOnRequiredLevel(
     req.user.taskCompleted.map((a) => a.taskId),
     task.communityId,
     task.conditionLevel
   );
-  if (!isAllowed) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'You need to level up to this task');
-  }
-  if (task.submissionType === submissionType.None) {
+  if (!isAllowed) throw new ApiError(httpStatus.FORBIDDEN, 'You need to level up to this task');
+  const isTaskCompleted = await submissionService.isTaskCompleted(req.user, task, req.body);
+  if (!isTaskCompleted) throw new ApiError(httpStatus.FORBIDDEN, 'Task not completed');
+  if (!task.verificationType.includes(verificationTypes.Manual)) {
     Object.assign(req.body, { isReviewed: true, isCompleted: true });
   }
   Object.assign(req.body, {
@@ -36,7 +32,7 @@ const createSubmission = catchAsync(async (req, res) => {
       submission.taskId,
       submission.communityId,
       (submissionId = submission.id) => submissionId,
-      (price = submission.rewardedAmount) => price
+      (reward = submission.rewardedAmount) => reward
     );
   }
   res.status(httpStatus.CREATED).send(submission);
@@ -51,28 +47,27 @@ const getSubmissions = catchAsync(async (req, res) => {
 
 const getSubmission = catchAsync(async (req, res) => {
   const submission = await submissionService.getSubmissionById(req.params.submissionId);
-  if (!submission) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Submission not found');
-  }
+  if (!submission) throw new ApiError(httpStatus.NOT_FOUND, 'Submission not found');
   res.send(submission);
 });
 
 const updateSubmission = catchAsync(async (req, res) => {
-  const submission = await submissionService.updateSubmissionById(req.user.id, req.params.submissionId, req.body, req.file);
+  const submission = await submissionService.updateSubmissionById(req.community.id, req.params.submissionId, req.body);
   if (submission.isCompleted && submission.isReviewed) {
     await transactionService.createTransaction(
       submission.userId,
       submission.taskId,
       submission.communityId,
       (submissionId = submission.id) => submissionId,
-      (price = submission.rewardedAmount) => price
+      (reward = submission.rewardedAmount) => reward
     );
   }
   res.send(submission);
 });
-
+// TODO: add task to user array
+// TODO: add check for submission type
 const deleteSubmission = catchAsync(async (req, res) => {
-  await submissionService.deleteSubmissionById(req.user.id, req.params.submissionId);
+  await submissionService.deleteSubmissionById(req.community.id, req.params.submissionId);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
