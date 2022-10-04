@@ -11,7 +11,6 @@ const userSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    required: false,
     unique: true,
     trim: true,
     validate: [validator.isEmail, 'Please provide a valid email'],
@@ -107,25 +106,14 @@ const userSchema = mongoose.Schema({
       },
     },
   ],
-  dateOfEntry: {
-    type: Date,
-    default: new Date(),
-  },
-  lastUpdated: {
-    type: Date,
-    default: new Date(),
-  },
   twitter: {
     type: String,
-    trim: true,
   },
   discord: {
     type: String,
-    trim: true,
   },
   telegram: {
     type: String,
-    trim: true,
   },
   website: {
     type: String,
@@ -140,6 +128,14 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false,
     private: true,
+  },
+  dateOfEntry: {
+    type: Date,
+    default: new Date(),
+  },
+  lastUpdated: {
+    type: Date,
+    default: new Date(),
   },
 });
 

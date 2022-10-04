@@ -30,12 +30,9 @@ exports.updateUser = {
         number: Joi.string(),
       }),
       description: Joi.string(),
-      // TODO wallet address verificationChecks
+      // TODO wallet address verification
       walletAddress: Joi.string(),
-      // TODO link verificationChecks
-      // twitter: Joi.string(),
-      // discord: Joi.string(),
-      // telegram: Joi.string(),
+      // TODO link verification
       website: Joi.string(),
     })
     .min(1),

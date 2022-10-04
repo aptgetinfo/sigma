@@ -1,8 +1,10 @@
 const TwitterTokenStrategy = require('passport-twitter-token');
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
+const httpStatus = require('http-status');
 const { User, Community } = require('../models');
 const config = require('./config');
 const { tokenTypes } = require('./constants');
+const ApiError = require('../utils/ApiError');
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
@@ -39,6 +41,10 @@ const jwtVerify = async (payload, done) => {
 };
 const twitterVerifyForUser = async (token, tokenSecret, profile, done) => {
   try {
+    const community = await Community.findOne({
+      'twitterProvider.id': profile.id,
+    });
+    if (community) throw new ApiError(httpStatus.BAD_REQUEST, 'Twitter already taken');
     const user = await User.findOne({
       'twitterProvider.id': profile.id,
     });
@@ -63,6 +69,10 @@ const twitterVerifyForUser = async (token, tokenSecret, profile, done) => {
 
 const twitterVerifyForCommunity = async (token, tokenSecret, profile, done) => {
   try {
+    const user = await User.findOne({
+      'twitterProvider.id': profile.id,
+    });
+    if (user) throw new ApiError(httpStatus.BAD_REQUEST, 'Twitter already taken');
     const community = await Community.findOne({
       'twitterProvider.id': profile.id,
     });

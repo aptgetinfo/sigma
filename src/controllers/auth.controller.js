@@ -104,20 +104,20 @@ const twitterVerifyCommunity = catchAsync(async (req, res, next) => {
 
 const discordLogin = catchAsync(async (req, res) => {
   const { code, state } = req.query;
-  const doc = await tokenService.verifyToken(state, tokenTypes.REFRESH);
-  const userData = await userService.getUserById(doc.user);
+  const { doc } = await tokenService.verifyToken(state, tokenTypes.REFRESH);
+  const userData = await userService.getUserById(doc);
   const data = !userData.discordProvider.expiresAt
     ? await authService.loginWithDiscord(code)
     : userData.discordProvider.expiresAt < Date.now()
     ? await authService.discordRefreshAccessToken(userData.discordProvider.refreshToken)
     : { access_token: userData.discordProvider.accessToken, refresh_token: userData.discordProvider.refreshToken };
   const user = await authService.getUserDiscordProfile(data.access_token);
-  const updatedUser = await userService.updateUserById(doc.user, {
+  const updatedUser = await userService.updateUserById(doc, {
     discordProvider: {
       id: user.userId,
       username: user.username,
-      avatar: user.avatar,
-      email: user.email,
+      // avatar: user.avatar,
+      // email: user.email,
       accessToken: data.access_token,
       refreshToken: data.refresh_token,
       expiresAt: new Date(new Date().setDate(new Date().getDate() + 7)),
@@ -129,14 +129,14 @@ const discordLogin = catchAsync(async (req, res) => {
 
 const discordBotLogin = catchAsync(async (req, res) => {
   const { code, permissions, state } = req.query;
-  const doc = await tokenService.verifyToken(state, tokenTypes.REFRESH);
-  const communityData = await communityService.getCommunityById(doc.user);
+  const { doc } = await tokenService.verifyToken(state, tokenTypes.REFRESH);
+  const communityData = await communityService.getCommunityById(doc);
   const data = !communityData.discordProvider.expiresAt
     ? await authService.loginWithDiscord(code, true)
     : communityData.discordProvider.expiresAt < Date.now()
     ? await authService.discordRefreshAccessToken(communityData.discordProvider.refreshToken, true)
     : { access_token: communityData.discordProvider.accessToken, refresh_token: communityData.discordProvider.refreshToken };
-  const updatedCommunity = await communityService.updateCommunityById(doc.user, {
+  const updatedCommunity = await communityService.updateCommunityById(doc, {
     discordProvider: {
       id: data.guild.id,
       username: data.guild.name,
