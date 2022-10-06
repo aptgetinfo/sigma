@@ -29,6 +29,9 @@ const toJSON = (schema) => {
       delete ret.__v;
       delete ret.createdAt;
       delete ret.updatedAt;
+      delete ret.twitterProvider;
+      delete ret.discordProvider;
+      delete ret.telegramProvider;
       if (transform) {
         return transform(doc, ret, options);
       }

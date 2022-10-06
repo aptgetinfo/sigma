@@ -4,8 +4,9 @@ const ApiError = require('../utils/ApiError');
 
 const createTransaction = async (transactionBody) => {
   if (await Transaction.isTransactionDone(transactionBody.submissionId)) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Transcation already exists');
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Transaction already exists');
   }
+  // TODO: check if reward amount is there
   return Transaction.create(transactionBody);
 };
 

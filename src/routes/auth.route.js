@@ -31,3 +31,4 @@ router.post('/verify-email', auth(), validate(authValidation.verifyEmail), authC
 router.post('/verify-sms', auth(), validate(authValidation.verifySms), authController.verifySms);
 
 module.exports = router;
+// TODO: if user image doesnt sets using twitter then set it to discord images

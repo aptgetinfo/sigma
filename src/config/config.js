@@ -13,8 +13,8 @@ const envVarsSchema = Joi.object()
     TWILIO_AUTH_TOKEN: Joi.string().required().description('Twilio Auth Token'),
     TWILIO_SERVICE_SID: Joi.string().required().description('Twilio Service SID'),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
-    JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
-    JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
+    JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(300).description('minutes after which access tokens expire'),
+    JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(300).description('days after which refresh tokens expire'),
     JWT_RESET_PASSWORD_EXPIRATION_MINUTES: Joi.number()
       .default(10)
       .description('minutes after which reset password token expires'),
@@ -29,12 +29,14 @@ const envVarsSchema = Joi.object()
     DISCORD_BOT_CLIENT_ID: Joi.string().required().description('Discord Bot Client Secret'),
     DISCORD_BOT_CLIENT_SECRET: Joi.string().required().description('Discord Bot Client Secret'),
     DISCORD_BOT_REDIRECT_URI: Joi.string().required().description('Discord Bot Redirect URI'),
+    DISCORD_BOT_TOKEN: Joi.string().required().description('Discord Bot Token'),
     TWITTER_API_KEY: Joi.string().required().description('Twitter API Key'),
     TWITTER_API_KEY_SECRET: Joi.string().required().description('Twitter API Secret'),
     TWITTER_BEARER_TOKEN: Joi.string().required().description('Twitter Bearer Token'),
     TWITTER_COMMUNITY_API_KEY: Joi.string().required().description('Twitter Community API Key'),
     TWITTER_COMMUNITY_API_KEY_SECRET: Joi.string().required().description('Twitter Community API Secret'),
     TWITTER_COMMUNITY_BEARER_TOKEN: Joi.string().required().description('Twitter Community Bearer Token'),
+    TELEGRAM_BOT_TOKEN: Joi.string().required().description('Telegram Bot Token'),
     // SMTP_HOST: Joi.string().description('server that will send the emails'),
     // SMTP_PORT: Joi.number().description('port to connect to the email server'),
     // SMTP_USERNAME: Joi.string().description('username for email server'),
@@ -103,5 +105,9 @@ module.exports = {
     bot_client_id: envVars.DISCORD_BOT_CLIENT_ID,
     bot_client_secret: envVars.DISCORD_BOT_CLIENT_SECRET,
     bot_redirect_uri: envVars.DISCORD_BOT_REDIRECT_URI,
+    bot_token: envVars.DISCORD_BOT_TOKEN,
+  },
+  telegram: {
+    bot_token: envVars.TELEGRAM_BOT_TOKEN,
   },
 };

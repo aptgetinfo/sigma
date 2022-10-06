@@ -1,29 +1,36 @@
 const axios = require('axios');
-// const httpStatus = require('http-status');
-// const ApiError = require('../utils/ApiError');
+const config = require('../config/config');
 
-const config = (accessToken) => ({
+const header = {
   headers: {
-    Authorization: `Bearer ${accessToken}`,
+    Authorization: `Bearer ${config.twitter.bearer}`,
   },
-});
-const getUserId = async (username, accessToken) => {
+};
+const getUserId = async (username) => {
   try {
     const userInfo = await axios
-      .get(`https://api.twitter.com/2/users/by/username/${username}`, config(accessToken))
+      .get(`https://api.twitter.com/2/users/by/username/${username}`, header)
       .then((res) => res.data);
     return userInfo.data.id;
   } catch (err) {
     return err;
   }
 };
-const navigateTweetsForLikes = async (tweetId, username, accessToken, next) => {
+
+const getTweetId = async (url) => {
   try {
     const tweetInfo = await axios
-      .get(
-        `https://api.twitter.com/2/tweets/${tweetId}/liking_users?max_results=100&pagination_token=${next}`,
-        config(accessToken)
-      )
+      .get(`https://api.twitter.com/2/tweets?ids=${url.split('/').pop()}`, header)
+      .then((res) => res.data);
+    return tweetInfo.data[0].id;
+  } catch (err) {
+    return err;
+  }
+};
+const navigateTweetsForLikes = async (tweetId, username, next) => {
+  try {
+    const tweetInfo = await axios
+      .get(`https://api.twitter.com/2/tweets/${tweetId}/liking_users?max_results=100&pagination_token=${next}`, header)
       .then((res) => res.data);
     const { data, meta } = tweetInfo;
     if (meta.result_count !== 0) {
@@ -37,10 +44,10 @@ const navigateTweetsForLikes = async (tweetId, username, accessToken, next) => {
   }
 };
 
-const navigateTweetsForFollow = async (userId, accountName, accessToken, next, username) => {
+const navigateTweetsForFollow = async (userId, accountName, next, username) => {
   try {
     const getInitialFollowingInfo = await axios
-      .get(`https://api.twitter.com/2/users/${userId}/following?pagination_token=${next}`, config(accessToken))
+      .get(`https://api.twitter.com/2/users/${userId}/following?pagination_token=${next}`, header)
       .then((res) => res.data);
 
     const { data, meta } = getInitialFollowingInfo;
@@ -56,13 +63,10 @@ const navigateTweetsForFollow = async (userId, accountName, accessToken, next, u
   }
 };
 
-const navigateTweetsForRetweet = async (tweetId, username, accessToken, next) => {
+const navigateTweetsForRetweet = async (tweetId, username, next) => {
   try {
     const tweetInfo = await axios
-      .get(
-        `https://api.twitter.com/2/tweets/${tweetId}/retweeted_by?max_results=100&pagination_token=${next}`,
-        config(accessToken)
-      )
+      .get(`https://api.twitter.com/2/tweets/${tweetId}/retweeted_by?max_results=100&pagination_token=${next}`, header)
       .then((res) => res.data);
     const { data, meta } = tweetInfo;
 
@@ -77,9 +81,9 @@ const navigateTweetsForRetweet = async (tweetId, username, accessToken, next) =>
   }
 };
 
-const checkLike = async (username, tweetId, accessToken) => {
+const checkLike = async (username, tweetId) => {
   const getInitialTweetInfo = await axios
-    .get(`https://api.twitter.com/2/tweets/${tweetId}/liking_users`, config(accessToken))
+    .get(`https://api.twitter.com/2/tweets/${tweetId}/liking_users`, header)
     .then((res) => res.data);
 
   const { data, meta } = getInitialTweetInfo;
@@ -88,11 +92,11 @@ const checkLike = async (username, tweetId, accessToken) => {
   return true;
 };
 
-const checkFollowing = async (username, accessToken, accountName) => {
-  const userId = await getUserId(username, accessToken);
+const checkFollowing = async (username, accountName) => {
+  const userId = await getUserId(username, config.twitter.bearer);
 
   const getInitialFollowingInfo = await axios
-    .get(`https://api.twitter.com/2/users/${userId}/following`, config(accessToken))
+    .get(`https://api.twitter.com/2/users/${userId}/following`, header)
     .then((res) => res.data);
   const { data, meta } = getInitialFollowingInfo;
   const userFollows = data.some((user) => user.username === accountName);
@@ -100,9 +104,9 @@ const checkFollowing = async (username, accessToken, accountName) => {
   return true;
 };
 
-const checkRetweet = async (username, accessToken, tweetId) => {
+const checkRetweet = async (username, tweetId) => {
   const getInitialTweetInfo = await axios
-    .get(`https://api.twitter.com/2/tweets/${tweetId}/retweeted_by`, config(accessToken))
+    .get(`https://api.twitter.com/2/tweets/${tweetId}/retweeted_by`, header)
     .then((res) => res.data);
 
   const { data, meta } = getInitialTweetInfo;
@@ -119,65 +123,21 @@ const extractInfo = (url) => {
     tweetId: match[2],
   };
 };
-const checkTweet = async (url, text, accessToken) => {
+const checkTweet = async (url, text) => {
   const { tweetId } = extractInfo(url);
 
-  const getTweetInfo = await axios
-    .get(`https://api.twitter.com/2/tweets/${tweetId}`, config(accessToken))
-    .then((res) => res.data);
-
+  const getTweetInfo = await axios.get(`https://api.twitter.com/2/tweets/${tweetId}`, header).then((res) => res.data);
+  // TODO: add check if same user has tweeted or not
   const { data } = getTweetInfo;
   if (data.text === text) return true;
+  // TODO: user regex to match tweet if quote retweet is the task
   return false;
 };
-
-// const createCommunity = async (communityBody) => {
-//   if (await Community.isNameTaken(communityBody.name)) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Name already taken');
-//   }
-//   return Community.create(communityBody);
-// };
-
-// const queryCommunitys = async (filter, options) => {
-//   const communitys = await Community.paginate(filter, options);
-//   return communitys;
-// };
-
-// const getCommunityById = async (id) => Community.findById(id);
-// const getCommunityByName = async (name) => Community.findOne({ name });
-
-// const updateCommunityById = async (userId, communityId, updateBody, file) => {
-//   const community = await getCommunityById(communityId);
-//   if (!community) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
-//   }
-//   if (userId !== community.admin.toString()) {
-//     throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to update this community');
-//   }
-//   if (updateBody.name && (await Community.isNameTaken(updateBody.name, communityId))) {
-//     throw new ApiError(httpStatus.BAD_REQUEST, 'Name already taken');
-//   }
-//   Object.assign(community, updateBody);
-//   if (file) Object.assign(updateBody, { image: file.filename });
-//   await community.save();
-//   return community;
-// };
-
-// const deleteCommunityById = async (userId, communityId) => {
-//   const community = await getCommunityById(communityId);
-//   if (!community) {
-//     throw new ApiError(httpStatus.NOT_FOUND, 'Community not found');
-//   }
-//   if (userId !== community.admin.toString()) {
-//     throw new ApiError(httpStatus.FORBIDDEN, 'You are not allowed to delete this community');
-//   }
-//   await community.remove();
-//   return community;
-// };
 
 module.exports = {
   checkLike,
   checkFollowing,
   checkRetweet,
   checkTweet,
+  getTweetId,
 };
